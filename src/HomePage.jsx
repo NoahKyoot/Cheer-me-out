@@ -128,7 +128,7 @@ export default function HomePage() {
                           <p className="text-gray-700 text-sm">{entry.time}</p>
                         </li>
                       ))}
-                    {visibleTeams.size > 0 && teamPractice
+                    {visibleTeams.size > 0 && teamPractice.some((entry) => visibleTeams.has(entry.team)) && teamPractice
                       .filter((entry) => entry.day === day && visibleTeams.has(entry.team))
                       .map((entry, idx) => (
                         <li key={`team-${idx}`} className="bg-yellow-50 shadow p-2 rounded">
