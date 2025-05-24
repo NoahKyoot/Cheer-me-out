@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './HomePage';
 
 function CompetitionDetail() {
@@ -13,11 +13,11 @@ function CompetitionDetail() {
 
 export default function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/competitions/:id" element={<CompetitionDetail />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
