@@ -130,8 +130,8 @@ export default function HomePage() {
               {daysOfWeek.map((day) => (
                 <td key={day} className="align-top p-2 border border-gray-300 w-1/7">
                   <ul className="space-y-2">
-                    {tumblingSchedule
-                      .filter((entry) => entry.day === day && (visibleLevels.size === 0 || visibleLevels.has(entry.level)))
+                    {visibleLevels.size > 0 && tumblingSchedule
+                      .filter((entry) => entry.day === day && visibleLevels.has(entry.level))
                       .map((entry, idx) => (
                         <li key={`tum-${idx}`} className="bg-white shadow p-2 rounded">
                           <p className="text-pink-600 font-semibold">{levelIcons[entry.level]} {entry.level}</p>
