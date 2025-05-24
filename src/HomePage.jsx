@@ -149,28 +149,36 @@ export default function HomePage() {
                 <td key={day} className="align-top p-2 border border-gray-300 w-1/7">
                   <ul className="space-y-2">
                     {visibleLevels.size > 0 && (
-                      <li className="bg-white shadow p-2 rounded">
-                        <p className="text-pink-600 font-semibold mb-1">Tumbling Classes</p>
-                        {tumblingSchedule
-                          .filter((entry) => entry.day === day && visibleLevels.has(entry.level))
-                          .map((entry, idx) => (
-                            <div key={`tum-${idx}-${day}`} className="text-sm text-gray-700">
-                              {levelIcons[entry.level]} {entry.level}: {entry.time}
-                            </div>
-                          ))}
-                      </li>
+                      tumblingSchedule
+                        .filter((entry) => entry.day === day && visibleLevels.has(entry.level))
+                        .length > 0 && (
+                          <li className="bg-white shadow p-2 rounded">
+                            <p className="text-pink-600 font-semibold mb-1">Tumbling Classes</p>
+                            {tumblingSchedule
+                              .filter((entry) => entry.day === day && visibleLevels.has(entry.level))
+                              .map((entry, idx) => (
+                                <div key={`tum-${idx}-${day}`} className="text-sm text-gray-700">
+                                  {levelIcons[entry.level]} {entry.level}: {entry.time}
+                                </div>
+                              ))}
+                          </li>
+                        )
                     )}
                     {visibleTeams.size > 0 && (
-                      <li className="bg-yellow-50 shadow p-2 rounded">
-                        <p className="text-yellow-700 font-semibold mb-1">Team Practices</p>
-                        {teamPractice
-                          .filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team))
-                          .map((entry, idx) => (
-                            <div key={`team-${idx}-${day}`} className="text-sm text-gray-700">
-                              {teamIcons[entry.team]} {entry.team}: 6:00 PM – 8:00 PM
-                            </div>
-                          ))}
-                      </li>
+                      teamPractice
+                        .filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team))
+                        .length > 0 && (
+                          <li className="bg-yellow-50 shadow p-2 rounded">
+                            <p className="text-yellow-700 font-semibold mb-1">Team Practices</p>
+                            {teamPractice
+                              .filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team))
+                              .map((entry, idx) => (
+                                <div key={`team-${idx}-${day}`} className="text-sm text-gray-700">
+                                  {teamIcons[entry.team]} {entry.team}: 6:00 PM – 8:00 PM
+                                </div>
+                              ))}
+                          </li>
+                        )
                     )}
                   </ul>
                 </td>
