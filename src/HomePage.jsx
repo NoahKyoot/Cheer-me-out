@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { addDays, format, startOfWeek } from 'date-fns';
 
 export default function HomePage() {
@@ -59,10 +60,17 @@ export default function HomePage() {
     { team: 'Inferno', days: ['Mon', 'Wed'] }
   ];
 
-  const specialEvents = [
-    { name: 'Choreography', date: 'July 21 - July 25, 2025 (Mini, Youth, Juniors, Seniors)' },
-    { name: 'Team Bonding', date: 'July 26, 2025' },
-    { name: 'Christmas/Holiday Party', date: 'December 2025 (per team)' }
+  const competitions = [
+    { id: 'showcase-memphis-2025', name: 'Showcase – Memphis, TN', date: 'November 8, 2025' },
+    { id: 'cheersport-memphis-2025', name: 'Cheersport – Memphis, TN', date: 'November 9, 2025' },
+    { id: 'deep-south-pigeon-forge-2025', name: 'Deep South – Pigeon Forge, TN', date: 'December 13-14, 2025' },
+    { id: 'battle-big-top-2025', name: 'Battle Under the Big Top – Atlanta, GA', date: 'December 13-14, 2025' },
+    { id: 'athletic-championships-2026', name: 'Athletic Championships – Chattanooga, TN', date: 'January 24-25, 2026' },
+    { id: 'cheer-expo-2026', name: 'Cheer Expo – Pigeon Forge, TN', date: 'January 31 - February 1, 2026' },
+    { id: 'nca-classic-2026', name: 'NCA Classic – Memphis, TN', date: 'February 7, 2026' },
+    { id: 'deep-south-biloxi-2026', name: 'Deep South – Biloxi, MS', date: 'February 14-15, 2026' },
+    { id: 'uca-nationals-2026', name: 'UCA Nationals – Orlando, FL', date: 'March 14-15, 2026' },
+    { id: 'one-up-2026', name: 'One Up – Nashville, TN', date: 'March 28-30, 2026' }
   ];
 
   const toggleLevel = (lvl) => {
@@ -111,26 +119,7 @@ export default function HomePage() {
             {teamIcons[team]} {team}
           </button>
         ))}
-        <button
-          onClick={() => setShowSpecials(!showSpecials)}
-          className={`px-4 py-2 rounded ${showSpecials ? 'bg-green-600 text-white' : 'bg-green-100 text-green-800'}`}
-        >
-          🎉 Specials
-        </button>
       </div>
-
-      {showSpecials && (
-        <section className="bg-green-50 p-4 rounded shadow mb-6">
-          <h2 className="text-xl font-semibold text-green-700 mb-2">Special Events</h2>
-          <ul className="list-disc pl-5 space-y-1">
-            {specialEvents.map((event, idx) => (
-              <li key={idx}>
-                <span className="font-bold">{event.name}:</span> {event.date}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
 
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-300">
@@ -148,37 +137,29 @@ export default function HomePage() {
               {daysOfWeek.map((day) => (
                 <td key={day} className="align-top p-2 border border-gray-300 w-1/7">
                   <ul className="space-y-2">
-                    {visibleLevels.size > 0 && (
-                      tumblingSchedule
-                        .filter((entry) => entry.day === day && visibleLevels.has(entry.level))
-                        .length > 0 && (
-                          <li className="bg-white shadow p-2 rounded">
-                            <p className="text-pink-600 font-semibold mb-1">Tumbling Classes</p>
-                            {tumblingSchedule
-                              .filter((entry) => entry.day === day && visibleLevels.has(entry.level))
-                              .map((entry, idx) => (
-                                <div key={`tum-${idx}-${day}`} className="text-sm text-gray-700">
-                                  {levelIcons[entry.level]} {entry.level}: {entry.time}
-                                </div>
-                              ))}
-                          </li>
-                        )
+                    {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
+                      <li className="bg-white shadow p-2 rounded">
+                        <p className="text-pink-600 font-semibold mb-1">Tumbling Classes</p>
+                        {tumblingSchedule
+                          .filter((entry) => entry.day === day && visibleLevels.has(entry.level))
+                          .map((entry, idx) => (
+                            <div key={`tum-${idx}-${day}`} className="text-sm text-gray-700">
+                              {levelIcons[entry.level]} {entry.level}: {entry.time}
+                            </div>
+                          ))}
+                      </li>
                     )}
-                    {visibleTeams.size > 0 && (
-                      teamPractice
-                        .filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team))
-                        .length > 0 && (
-                          <li className="bg-yellow-50 shadow p-2 rounded">
-                            <p className="text-yellow-700 font-semibold mb-1">Team Practices</p>
-                            {teamPractice
-                              .filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team))
-                              .map((entry, idx) => (
-                                <div key={`team-${idx}-${day}`} className="text-sm text-gray-700">
-                                  {teamIcons[entry.team]} {entry.team}: 6:00 PM – 8:00 PM
-                                </div>
-                              ))}
-                          </li>
-                        )
+                    {visibleTeams.size > 0 && teamPractice.some((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)) && (
+                      <li className="bg-yellow-50 shadow p-2 rounded">
+                        <p className="text-yellow-700 font-semibold mb-1">Team Practices</p>
+                        {teamPractice
+                          .filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team))
+                          .map((entry, idx) => (
+                            <div key={`team-${idx}-${day}`} className="text-sm text-gray-700">
+                              {teamIcons[entry.team]} {entry.team}: 6:00 PM – 8:00 PM
+                            </div>
+                          ))}
+                      </li>
                     )}
                   </ul>
                 </td>
@@ -187,6 +168,21 @@ export default function HomePage() {
           </tbody>
         </table>
       </div>
+
+      <section className="mt-10">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Upcoming Competitions</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {competitions.slice(0, 2).map((comp) => (
+            <div key={comp.id} className="bg-white shadow rounded p-4">
+              <h3 className="text-pink-600 font-bold text-lg mb-1">{comp.name}</h3>
+              <p className="text-gray-700 mb-2">📅 {comp.date}</p>
+              <Link to={`/competitions/${comp.id}`} className="inline-block bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600">
+                View Details
+              </Link>
+            </div>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
