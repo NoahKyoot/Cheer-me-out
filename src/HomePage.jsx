@@ -1,22 +1,18 @@
-// HomePage.jsx
-// ... (other imports and code remain the same) ...
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Added useEffect for one-time calculation if needed, or useMemo
 import { Link } from 'react-router-dom';
-import { addDays, format, startOfWeek } from 'date-fns';
+import { addDays, format, startOfWeek, parse, isFuture, compareAsc } from 'date-fns';
 
 export default function HomePage() {
-  // ... (all your existing state, data, and functions remain the same) ...
-  // The 'competitions' array here can be just a slice or the first few items
-  // if the full list is managed elsewhere or in CompetitionsPage.jsx
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const [weekOffset, setWeekOffset] = useState(0);
   const [visibleLevels, setVisibleLevels] = useState(new Set());
   const [visibleTeams, setVisibleTeams] = useState(new Set());
+  const [nextCompetition, setNextCompetition] = useState(null);
 
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
 
   const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
-  const teamIcons = { 
+  const teamIcons = {
     Majors: '🌟', Legacy: '👑', Blaze: '🔥', Dynasty: '🏰', Reign: '💎',
     Prodigy: '🚀', 'Lady Legends': '🎀', 'Black Smack': '🖤', Inferno: '🔥'
   };
@@ -40,13 +36,53 @@ export default function HomePage() {
     { team: 'Inferno', days: ['Mon', 'Wed'] }
   ];
 
-  // This 'competitions' array on HomePage could be a subset of all competitions
+  // This 'competitions' array on HomePage will be used to find the *next* one.
+  // For more accuracy, this should be your full list of competitions or a sufficiently forward-looking list.
   const competitions = [
     { id: 'showcase-memphis-2025', name: 'Showcase – Memphis, TN', date: 'November 8, 2025', description: 'Join us for our annual team showcase!' },
     { id: 'cheersport-memphis-2025', name: 'Cheersport – Memphis, TN', date: 'November 9, 2025', description: 'A major regional competition.' },
-    { id: 'winter-classic-nashville-2026', name: 'Winter Classic – Nashville, TN', date: 'January 25-26, 2026', description: 'Kick off the new year with fierce competition.' } // Showing 3 here
+    { id: 'winter-classic-nashville-2026', name: 'Winter Classic – Nashville, TN', date: 'January 25-26, 2026', description: 'Kick off the new year with fierce competition.' },
+    { id: 'battle-at-the-beach-myrtle-2026', name: 'Battle at the Beach – Myrtle Beach, SC', date: 'March 14-15, 2026', description: 'Sun, sand, and spirit!' },
+    { id: 'summer-showdown-atlanta-2025', name: 'Summer Showdown – Atlanta, GA', date: 'July 12, 2025', description: 'Mid-summer cheer excellence!'}
   ];
 
+  // Function to parse competition dates, attempting to handle single dates and start of ranges
+  const parseCompetitionDate = (dateString) => {
+    // Try to extract the first part of a date range like "Month Day(-Day)?, Year"
+    const match = dateString.match(/([A-Za-z]+ \d+)(?:-\d+)?, (\d{4})/);
+    let parsableDateString = dateString; // Default to original string
+
+    if (match && match[1] && match[2]) {
+      parsableDateString = `${match[1]}, ${match[2]}`; // e.g., "January 25, 2026"
+    }
+    
+    try {
+      // Common format: "Month Day, Year"
+      const parsed = parse(parsableDateString, 'MMMM d, yyyy', new Date());
+      if (parsed.toString() === 'Invalid Date') return null;
+      return parsed;
+    } catch (e) {
+      console.warn(`Could not parse date: ${dateString} as ${parsableDateString}`);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const now = new Date();
+    const futureCompetitions = competitions
+      .map(comp => ({
+        ...comp,
+        parsedDate: parseCompetitionDate(comp.date)
+      }))
+      .filter(comp => comp.parsedDate && isFuture(comp.parsedDate))
+      .sort((a, b) => compareAsc(a.parsedDate, b.parsedDate));
+
+    if (futureCompetitions.length > 0) {
+      setNextCompetition(futureCompetitions[0]);
+    } else {
+      setNextCompetition(null);
+    }
+  }, []); // Recalculate only on mount or if `competitions` array changes (if it were dynamic)
 
   const toggleLevel = (lvl) => {
     const updated = new Set(visibleLevels);
@@ -70,7 +106,7 @@ export default function HomePage() {
       </header>
 
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* ... Week Navigation and Filter Buttons ... */}
+        {/* Week Navigation and Filters ... */}
         <div className="flex justify-center gap-4">
           <button onClick={() => setWeekOffset(weekOffset - 1)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">← Previous Week</button>
           <button onClick={() => setWeekOffset(0)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">This Week</button>
@@ -166,28 +202,30 @@ export default function HomePage() {
 
         {/* MODIFIED UPCOMING COMPETITIONS SECTION */}
         <section>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
-            <Link to="/competitions" className="hover:text-pink-600 hover:underline transition-colors">
-              Upcoming Competitions
+          <div className="text-center mb-6">
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">Next Up!</h2>
+            <Link to="/competitions" className="text-sm text-pink-600 hover:text-pink-800 hover:underline transition-colors">
+              (View All Competitions)
             </Link>
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* The homepage shows a slice of competitions (e.g., first 3) */}
-            {competitions.slice(0, 3).map((comp) => (
-              <div key={comp.id} className="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow flex flex-col justify-between">
-                <div>
-                  <h3 className="text-pink-600 font-bold text-xl mb-2">{comp.name}</h3>
-                  <p className="text-gray-600 text-sm mb-3">📅 {comp.date}</p>
-                </div>
-                <Link 
-                  to={`/competitions/${comp.id}`} 
-                  className="mt-4 inline-block bg-pink-500 text-white px-5 py-2 rounded-md text-sm font-medium hover:bg-pink-600 transition-colors self-start"
-                >
-                  View Details
-                </Link>
-              </div>
-            ))}
           </div>
+          {nextCompetition ? (
+            <div className="max-w-lg mx-auto bg-white shadow-xl rounded-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl">
+              <h3 className="text-2xl font-bold text-pink-600 mb-3">{nextCompetition.name}</h3>
+              <p className="text-gray-700 text-md mb-2">📅 <span className="font-medium">{nextCompetition.date}</span></p>
+              {nextCompetition.description && <p className="text-gray-600 text-sm mt-2 mb-4">{nextCompetition.description}</p>}
+              <Link
+                to={`/competitions/${nextCompetition.id}`}
+                className="inline-block bg-pink-500 text-white px-6 py-2 rounded-md font-medium hover:bg-pink-600 transition-colors"
+              >
+                View Details
+              </Link>
+            </div>
+          ) : (
+            <div className="text-center text-gray-600 py-8">
+              <p className="text-lg mb-2">No upcoming competitions found in our current schedule.</p>
+              <p>Please check back later or view our full competitions history.</p>
+            </div>
+          )}
         </section>
       </div>
     </main>
