@@ -2,15 +2,6 @@
 // unless specific notes override it for an event.
 export const allCompetitions = [
   {
-    id: 'showcase-memphis-2025',
-    name: 'Showcase',
-    location: 'Memphis, TN',
-    dateString: 'November 25, 2025',
-    sortableDate: '2025-11-08',
-    notes: 'Date is tentative. For Minis, Youth, Juniors, and Seniors.',
-    description: 'Join us for our annual team showcase!'
-  },
-  {
     id: 'cheersport-memphis-2025',
     name: 'Cheersport',
     location: 'Memphis, TN',
