@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'; // Added useEffect for one-time calculation if needed, or useMemo
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { addDays, format, startOfWeek, parse, isFuture, compareAsc } from 'date-fns';
+import { allCompetitions } from './data/competitionsData'; // <-- Import data
 
 export default function HomePage() {
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -12,12 +13,11 @@ export default function HomePage() {
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
 
   const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
-  const teamIcons = {
+  const teamIcons = { /* ... same as before ... */ 
     Majors: '🌟', Legacy: '👑', Blaze: '🔥', Dynasty: '🏰', Reign: '💎',
     Prodigy: '🚀', 'Lady Legends': '🎀', 'Black Smack': '🖤', Inferno: '🔥'
   };
-
-  const tumblingSchedule = [
+  const tumblingSchedule = [ /* ... same as before ... */ 
     { level: 'Level 3', day: 'Mon', time: '5:00 PM – 6:00 PM' }, { level: 'Level 5/6', day: 'Mon', time: '5:00 PM – 6:00 PM' },
     { level: 'Level 4', day: 'Mon', time: '6:00 PM – 7:00 PM' }, { level: 'Level 2', day: 'Mon', time: '7:00 PM – 8:00 PM' },
     { level: 'Level 2', day: 'Tue', time: '5:00 PM – 6:00 PM' }, { level: 'Level 1', day: 'Tue', time: '6:00 PM – 7:00 PM' },
@@ -27,8 +27,7 @@ export default function HomePage() {
     { level: 'Level 5/6', day: 'Thu', time: '5:00 PM – 6:00 PM' }, { level: 'Level 2', day: 'Thu', time: '6:00 PM – 7:00 PM' },
     { level: 'Level 1', day: 'Thu', time: '7:00 PM – 8:00 PM' }
   ];
-
-  const teamPractice = [
+  const teamPractice = [ /* ... same as before ... */ 
     { team: 'Majors', days: ['Tue', 'Thu'] }, { team: 'Legacy', days: ['Mon', 'Wed'] },
     { team: 'Blaze', days: ['Mon', 'Wed'] }, { team: 'Dynasty', days: ['Tue', 'Thu'] },
     { team: 'Reign', days: ['Mon', 'Wed'] }, { team: 'Prodigy', days: ['Tue', 'Thu'] },
@@ -36,43 +35,17 @@ export default function HomePage() {
     { team: 'Inferno', days: ['Mon', 'Wed'] }
   ];
 
-  // This 'competitions' array on HomePage will be used to find the *next* one.
-  // For more accuracy, this should be your full list of competitions or a sufficiently forward-looking list.
-  const competitions = [
-    { id: 'showcase-memphis-2025', name: 'Showcase – Memphis, TN', date: 'November 8, 2025', description: 'Join us for our annual team showcase!' },
-    { id: 'cheersport-memphis-2025', name: 'Cheersport – Memphis, TN', date: 'November 9, 2025', description: 'A major regional competition.' },
-    { id: 'winter-classic-nashville-2026', name: 'Winter Classic – Nashville, TN', date: 'January 25-26, 2026', description: 'Kick off the new year with fierce competition.' },
-    { id: 'battle-at-the-beach-myrtle-2026', name: 'Battle at the Beach – Myrtle Beach, SC', date: 'March 14-15, 2026', description: 'Sun, sand, and spirit!' },
-    { id: 'summer-showdown-atlanta-2025', name: 'Summer Showdown – Atlanta, GA', date: 'July 12, 2025', description: 'Mid-summer cheer excellence!'}
-  ];
+  // For display on homepage, we can take a slice from the imported full list
+  const competitionsForHomepage = allCompetitions.slice(0, 3);
 
-  // Function to parse competition dates, attempting to handle single dates and start of ranges
-  const parseCompetitionDate = (dateString) => {
-    // Try to extract the first part of a date range like "Month Day(-Day)?, Year"
-    const match = dateString.match(/([A-Za-z]+ \d+)(?:-\d+)?, (\d{4})/);
-    let parsableDateString = dateString; // Default to original string
-
-    if (match && match[1] && match[2]) {
-      parsableDateString = `${match[1]}, ${match[2]}`; // e.g., "January 25, 2026"
-    }
-    
-    try {
-      // Common format: "Month Day, Year"
-      const parsed = parse(parsableDateString, 'MMMM d, yyyy', new Date());
-      if (parsed.toString() === 'Invalid Date') return null;
-      return parsed;
-    } catch (e) {
-      console.warn(`Could not parse date: ${dateString} as ${parsableDateString}`);
-      return null;
-    }
-  };
 
   useEffect(() => {
     const now = new Date();
-    const futureCompetitions = competitions
+    const futureCompetitions = allCompetitions // Use the full imported list
       .map(comp => ({
         ...comp,
-        parsedDate: parseCompetitionDate(comp.date)
+        // Parse the sortableDate (YYYY-MM-DD)
+        parsedDate: comp.sortableDate ? parse(comp.sortableDate, 'yyyy-MM-dd', new Date()) : null
       }))
       .filter(comp => comp.parsedDate && isFuture(comp.parsedDate))
       .sort((a, b) => compareAsc(a.parsedDate, b.parsedDate));
@@ -82,31 +55,29 @@ export default function HomePage() {
     } else {
       setNextCompetition(null);
     }
-  }, []); // Recalculate only on mount or if `competitions` array changes (if it were dynamic)
+  }, []); // Runs once on mount
 
-  const toggleLevel = (lvl) => {
+  const toggleLevel = (lvl) => { /* ... same as before ... */ 
     const updated = new Set(visibleLevels);
     updated.has(lvl) ? updated.delete(lvl) : updated.add(lvl);
     setVisibleLevels(updated);
   };
-
-  const toggleTeam = (team) => {
+  const toggleTeam = (team) => { /* ... same as before ... */ 
     const updated = new Set(visibleTeams);
     updated.has(team) ? updated.delete(team) : updated.add(team);
     setVisibleTeams(updated);
   };
-
   const getDateForDay = (index) => format(addDays(weekStart, index), 'MMM d');
 
   return (
     <main className="min-h-screen p-6 bg-gray-50">
+      {/* ... Header, Week Navigation, Filters ... remain the same */}
       <header className="text-center mb-8">
         <h1 className="text-4xl font-bold text-pink-600 mb-2">Cheer Me Out</h1>
         <p className="text-lg text-gray-700">Weekly Calendar with Image Buttons</p>
       </header>
 
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Week Navigation and Filters ... */}
         <div className="flex justify-center gap-4">
           <button onClick={() => setWeekOffset(weekOffset - 1)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">← Previous Week</button>
           <button onClick={() => setWeekOffset(0)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">This Week</button>
@@ -199,8 +170,7 @@ export default function HomePage() {
               </tbody>
             </table>
         </div>
-
-        {/* MODIFIED UPCOMING COMPETITIONS SECTION */}
+        
         <section>
           <div className="text-center mb-6">
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Next Up!</h2>
@@ -210,9 +180,10 @@ export default function HomePage() {
           </div>
           {nextCompetition ? (
             <div className="max-w-lg mx-auto bg-white shadow-xl rounded-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl">
-              <h3 className="text-2xl font-bold text-pink-600 mb-3">{nextCompetition.name}</h3>
-              <p className="text-gray-700 text-md mb-2">📅 <span className="font-medium">{nextCompetition.date}</span></p>
+              <h3 className="text-2xl font-bold text-pink-600 mb-3">{nextCompetition.name} - {nextCompetition.location}</h3>
+              <p className="text-gray-700 text-md mb-2">📅 <span className="font-medium">{nextCompetition.dateString}</span></p>
               {nextCompetition.description && <p className="text-gray-600 text-sm mt-2 mb-4">{nextCompetition.description}</p>}
+              {nextCompetition.notes && <p className="text-xs text-gray-500 italic mt-2 mb-4">{nextCompetition.notes}</p>}
               <Link
                 to={`/competitions/${nextCompetition.id}`}
                 className="inline-block bg-pink-500 text-white px-6 py-2 rounded-md font-medium hover:bg-pink-600 transition-colors"
@@ -223,7 +194,7 @@ export default function HomePage() {
           ) : (
             <div className="text-center text-gray-600 py-8">
               <p className="text-lg mb-2">No upcoming competitions found in our current schedule.</p>
-              <p>Please check back later or view our full competitions history.</p>
+              <p>Please check back later or <Link to="/competitions" className="text-pink-600 hover:underline">view all competitions</Link>.</p>
             </div>
           )}
         </section>
