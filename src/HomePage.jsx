@@ -8,10 +8,10 @@ export default function HomePage() {
   const [weekOffset, setWeekOffset] = useState(0);
   const [visibleLevels, setVisibleLevels] = useState(new Set());
   const [visibleTeams, setVisibleTeams] = useState(new Set());
-  const [upcomingCompetitions, setUpcomingCompetitions] = useState([]); // Changed from nextCompetition
+  const [upcomingCompetitions, setUpcomingCompetitions] = useState([]);
 
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
-  const weekEnd = addDays(weekStart, 6);
+  const weekEnd = addDays(weekStart, 6); // Define weekEnd for date display
 
   const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
   const teamIcons = { 
@@ -65,12 +65,10 @@ export default function HomePage() {
     <main className="min-h-screen p-6 bg-gray-50">
       <header className="text-center mb-8">
         <h1 className="text-4xl font-bold text-pink-600 mb-2">Cheer Me Out</h1>
-        {/* UPDATED Subtitle Text */}
         <p className="text-lg text-gray-700">Weekly Calendar, Events, and Team information.</p>
       </header>
 
       <div className="max-w-7xl mx-auto space-y-8">
-        
         {/* Button Filters Section - Appears before week navigation and calendar */}
         <div className="space-y-6">
           <div className="text-center">
@@ -103,7 +101,7 @@ export default function HomePage() {
                 <button
                   key={teamInfo.team}
                   onClick={() => toggleTeam(teamInfo.team)}
-                  className={`flex-shrink-0 rounded overflow-hidden w-24 h-24 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
+                  className={`flex-shrink-0 rounded overflow-hidden w-28 h-28 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
                     visibleTeams.has(teamInfo.team) ? 'ring-4 ring-yellow-500 ring-inset bg-yellow-50 border-yellow-300' : 'bg-white border-gray-300 hover:border-yellow-400'
                   }`}
                   title={teamInfo.team}
@@ -119,7 +117,7 @@ export default function HomePage() {
           </div>
         </div>
         
-        {/* UPDATED Week Navigation - Above calendar, styled with arrows and central date display */}
+        {/* Week Navigation - Above calendar, styled with arrows and central date display */}
         <div className="flex items-center justify-center gap-3 sm:gap-6 mb-4">
           <button
             onClick={() => setWeekOffset(weekOffset - 1)}
@@ -129,9 +127,9 @@ export default function HomePage() {
             <svg className="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
           </button>
 
-          <div className="text-center flex-grow md:flex-grow-0"> {/* Allow text to take space but not push arrows too far on md+ */}
+          <div className="text-center flex-grow md:flex-grow-0">
             <h4 className="text-lg sm:text-xl font-semibold text-gray-700 whitespace-nowrap">
-              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')}
+              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')} {/* Completed date format */}
             </h4>
             {weekOffset !== 0 && (
               <button
@@ -155,7 +153,6 @@ export default function HomePage() {
         {/* Calendar Table */}
         <div className="overflow-x-auto bg-white rounded-lg shadow">
             <table className="min-w-full border-collapse">
-              {/* ... Table Head and Body ... */}
               <thead>
                 <tr className="bg-pink-100">
                   {daysOfWeek.map((day, idx) => (
