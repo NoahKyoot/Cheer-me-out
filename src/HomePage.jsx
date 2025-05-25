@@ -7,12 +7,14 @@ export default function HomePage() {
   const [weekOffset, setWeekOffset] = useState(0);
   const [visibleLevels, setVisibleLevels] = useState(new Set());
   const [visibleTeams, setVisibleTeams] = useState(new Set());
-  const [showSpecials, setShowSpecials] = useState(false); // This state is not currently used, but kept from original
+  const [showSpecials, setShowSpecials] = useState(false);
 
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
 
   const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
   const teamIcons = { Majors: '🌟', Legacy: '👑', Blaze: '🔥', Dynasty: '🏰', Reign: '💎', Prodigy: '🚀', 'Lady Legends': '🎀', 'Black Smack': '🖤', Inferno: '🔥' };
+  // Assuming a "Specials" icon, you can change it as needed
+  const specialsIcon = '✨';
 
   const tumblingSchedule = [
     { level: 'Level 3', day: 'Mon', time: '5:00 PM – 6:00 PM' },
@@ -75,18 +77,42 @@ export default function HomePage() {
         <button onClick={() => setWeekOffset(weekOffset + 1)} className="px-4 py-2 bg-pink-100 rounded">Next Week →</button>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-2 mb-4">
-        {Object.keys(levelIcons).map((lvl) => (
-          <button key={lvl} onClick={() => toggleLevel(lvl)} className={`px-4 py-2 rounded ${visibleLevels.has(lvl) ? 'bg-pink-600 text-white' : 'bg-pink-100 text-pink-800'}`}>
-            {levelIcons[lvl]} {lvl}
+      {/* Button Filters Section - Modified for two lines */}
+      <div className="space-y-3 mb-6"> {/* Increased bottom margin slightly */}
+        {/* Line 1: Level Toggles */}
+        <div className="flex flex-wrap justify-center gap-2">
+          {Object.keys(levelIcons).map((lvl) => (
+            <button
+              key={lvl}
+              onClick={() => toggleLevel(lvl)}
+              className={`px-4 py-2 rounded text-sm sm:text-base ${visibleLevels.has(lvl) ? 'bg-pink-600 text-white' : 'bg-pink-100 text-pink-800'}`}
+            >
+              {levelIcons[lvl]} {lvl}
+            </button>
+          ))}
+        </div>
+
+        {/* Line 2: Team Toggles and Specials Toggle */}
+        <div className="flex flex-wrap justify-center gap-2">
+          {Object.keys(teamIcons).map((team) => (
+            <button
+              key={team}
+              onClick={() => toggleTeam(team)}
+              className={`px-4 py-2 rounded text-sm sm:text-base ${visibleTeams.has(team) ? 'bg-yellow-600 text-white' : 'bg-yellow-100 text-yellow-800'}`}
+            >
+              {teamIcons[team]} {team}
+            </button>
+          ))}
+          <button
+            key="specials"
+            onClick={() => setShowSpecials(!showSpecials)}
+            className={`px-4 py-2 rounded text-sm sm:text-base ${showSpecials ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-800'}`}
+          >
+            {specialsIcon} Specials
           </button>
-        ))}
-        {Object.keys(teamIcons).map((team) => (
-          <button key={team} onClick={() => toggleTeam(team)} className={`px-4 py-2 rounded ${visibleTeams.has(team) ? 'bg-yellow-600 text-white' : 'bg-yellow-100 text-yellow-800'}`}>
-            {teamIcons[team]} {team}
-          </button>
-        ))}
+        </div>
       </div>
+      {/* End of Button Filters Section */}
 
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-300">
@@ -111,13 +137,14 @@ export default function HomePage() {
                       </li>
                     )}
                     {visibleTeams.size > 0 && teamPractice.some((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)) && (
-                      <li className="bg-yellow-50 shadow p-2 rounded"> {/* Removed mt-2 from here */}
+                      <li className="bg-yellow-50 shadow p-2 rounded"> {/* Retained the change from previous step: removed mt-2 */}
                         <p className="text-yellow-700 font-semibold mb-1">Team Practices</p>
                         {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
                           <div key={`team-${idx}-${day}`} className="text-sm text-gray-700">{teamIcons[entry.team]} {entry.team}: 6:00 PM – 8:00 PM</div>
                         ))}
                       </li>
                     )}
+                    {/* Add logic here to display "Specials" on the calendar if showSpecials is true and specials exist for this day */}
                   </ul>
                 </td>
               ))}
