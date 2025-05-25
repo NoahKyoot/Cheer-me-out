@@ -19,14 +19,14 @@ export const allCompetitions = [
     results: {
       '2025': [], 
       '2024': [
-        { teamName: 'Memphis Pride Cheer Legacy', level: 'L1 Youth', score: 87.9130 },
-        { teamName: 'Memphis Pride Cheer Dynasty', level: 'L1 Junior', score: 91.3493 },
-        { teamName: 'Memphis Pride Cheer Blaze', level: 'L2 Youth', score: 90.3000 },
-        { teamName: 'Memphis Pride Cheer Reign', level: 'L2 Junior', score: 94.0667 },
-        { teamName: 'Memphis Pride Cheer Prodigy', level: 'L3 Junior', score: 94.9000 },
-        { teamName: 'Memphis Pride Cheer Lady Legends', level: 'L4.2 Senior', score: 90.9167 },
-        { teamName: 'Memphis Pride Cheer Black Smack', level: 'L4 Senior', score: 92.5500 },
-        { teamName: 'Memphis Pride Cheer Inferno', level: 'L5 Senior', score: 93.5000 }
+        { teamName: 'Legacy', level: 'L1 Youth', score: 87.9130 },
+        { teamName: 'Dynasty', level: 'L1 Junior', score: 91.3493 },
+        { teamName: 'Blaze', level: 'L2 Youth', score: 90.3000 },
+        { teamName: 'Reign', level: 'L2 Junior', score: 94.0667 },
+        { teamName: 'Prodigy', level: 'L3 Junior', score: 94.9000 },
+        { teamName: 'Lady Legends', level: 'L4.2 Senior', score: 90.9167 },
+        { teamName: 'Black Smack', level: 'L4 Senior', score: 92.5500 },
+        { teamName: 'Inferno', level: 'L5 Senior', score: 93.5000 }
       ]
     }
   },
