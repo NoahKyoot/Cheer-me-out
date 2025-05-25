@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; // Make sure Link is imported
 import { addDays, format, startOfWeek } from 'date-fns';
 
+
 export default function HomePage() {
+
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const [weekOffset, setWeekOffset] = useState(0);
   const [visibleLevels, setVisibleLevels] = useState(new Set());
   const [visibleTeams, setVisibleTeams] = useState(new Set());
-  // const [showSpecials, setShowSpecials] = useState(false);
 
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
 
@@ -16,7 +17,6 @@ export default function HomePage() {
     Majors: '🌟', Legacy: '👑', Blaze: '🔥', Dynasty: '🏰', Reign: '💎',
     Prodigy: '🚀', 'Lady Legends': '🎀', 'Black Smack': '🖤', Inferno: '🔥'
   };
-  // const specialsIcon = '✨';
 
   const tumblingSchedule = [
     { level: 'Level 3', day: 'Mon', time: '5:00 PM – 6:00 PM' },
@@ -63,27 +63,22 @@ export default function HomePage() {
 
   const getDateForDay = (index) => format(addDays(weekStart, index), 'MMM d');
 
+
   return (
-    // Removed space-y-8 from main, p-6 provides outer padding
     <main className="min-h-screen p-6 bg-gray-50">
-      <header className="text-center mb-8"> {/* Added mb-8 for spacing below header */}
+      <header className="text-center mb-8">
         <h1 className="text-4xl font-bold text-pink-600 mb-2">Cheer Me Out</h1>
         <p className="text-lg text-gray-700">Weekly Calendar with Image Buttons</p>
       </header>
 
-      {/* New wrapper for constraining content width and managing spacing */}
       <div className="max-w-7xl mx-auto space-y-8">
-
-        {/* Week Navigation - moved inside wrapper */}
-        <div className="flex justify-center gap-4"> {/* Removed mb-4 */}
+        <div className="flex justify-center gap-4">
           <button onClick={() => setWeekOffset(weekOffset - 1)} className="px-4 py-2 bg-pink-100 rounded">← Previous Week</button>
           <button onClick={() => setWeekOffset(0)} className="px-4 py-2 bg-pink-100 rounded">This Week</button>
           <button onClick={() => setWeekOffset(weekOffset + 1)} className="px-4 py-2 bg-pink-100 rounded">Next Week →</button>
         </div>
 
-        {/* Button Filters Section - moved inside wrapper */}
-        <div className="space-y-6"> {/* Removed mb-8 */}
-          {/* All Star Tumbling Levels Group */}
+        <div className="space-y-6">
           <div className="text-center">
             <h3 className="text-xl font-semibold text-pink-600 mb-3">All Star Tumbling</h3>
             <div className="flex flex-wrap justify-center gap-2">
@@ -99,10 +94,14 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Memphis Pride Cheer Teams Group */}
+          {/* MODIFIED SECTION FOR TEAM LINK AND BUTTONS */}
           <div className="text-center">
-            {/* <h3 className="text-xl font-semibold text-yellow-700 mb-3">Memphis Pride Cheer</h3> */} {/* Optional Title */}
-            <div className="flex flex-wrap justify-center items-center gap-4"> {/* Removed mb-6 */}
+            <h3 className="text-xl font-semibold text-yellow-700 mb-1"> {/* Reduced mb for tighter link/button group */}
+              <Link to="/teams" className="hover:text-yellow-500 hover:underline transition-colors duration-150 ease-in-out">
+                Memphis Pride Cheer Teams
+              </Link>
+            </h3>
+            <div className="flex flex-wrap justify-center items-center gap-4 mt-3"> {/* Added mt-3 for space below link */}
               {teamPractice.map((teamInfo) => (
                 <button
                   key={teamInfo.team}
@@ -117,60 +116,55 @@ export default function HomePage() {
                   />
                 </button>
               ))}
-              {/* Specials button can be re-added here */}
             </div>
           </div>
+          {/* END OF MODIFIED SECTION */}
         </div>
-        {/* End of Button Filters Section */}
 
-        {/* Calendar Table - moved inside wrapper */}
         <div className="overflow-x-auto">
-          <table className="min-w-full border border-gray-300">
-            <thead>
-              <tr className="bg-pink-100">
-                {daysOfWeek.map((day, idx) => (
-                  <th key={day} className="p-2 text-pink-800 border border-gray-300">{day}<br /><span className="text-sm text-gray-500">{getDateForDay(idx)}</span></th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                {daysOfWeek.map((day) => (
-                  <td key={day} className="align-top p-2 border border-gray-300 w-1/7">
-                    <ul className="space-y-2">
-                      {/* Tumbling Schedule Display */}
-                      {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
-                        <li className="bg-white shadow p-2 rounded">
-                          <p className="text-pink-600 font-semibold mb-1">All Star Tumbling</p>
-                          {tumblingSchedule.filter((entry) => entry.day === day && visibleLevels.has(entry.level)).map((entry, idx) => (
-                            <div key={`tum-${idx}-${day}`} className="text-sm text-gray-700">
-                              {levelIcons[entry.level]} {entry.level}: {entry.time}
-                            </div>
-                          ))}
-                        </li>
-                      )}
-                      {/* Team Practice Display */}
-                      {visibleTeams.size > 0 && teamPractice.some((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)) && (
-                        <li className="bg-yellow-50 shadow p-2 rounded">
-                          <p className="text-yellow-700 font-semibold mb-1">Team Practices</p>
-                          {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
-                            <div key={`team-${idx}-${day}`} className="text-sm text-gray-700">
-                              {/* You could add teamIcons[entry.team] here if desired */}
-                              {entry.team}: 6:00 PM – 8:00 PM
-                            </div>
-                          ))}
-                        </li>
-                      )}
-                    </ul>
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
+          {/* ... Table ... */}
+            <table className="min-w-full border border-gray-300">
+              <thead>
+                <tr className="bg-pink-100">
+                  {daysOfWeek.map((day, idx) => (
+                    <th key={day} className="p-2 text-pink-800 border border-gray-300">{day}<br /><span className="text-sm text-gray-500">{getDateForDay(idx)}</span></th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  {daysOfWeek.map((day) => (
+                    <td key={day} className="align-top p-2 border border-gray-300 w-1/7">
+                      <ul className="space-y-2">
+                        {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
+                          <li className="bg-white shadow p-2 rounded">
+                            <p className="text-pink-600 font-semibold mb-1">All Star Tumbling</p>
+                            {tumblingSchedule.filter((entry) => entry.day === day && visibleLevels.has(entry.level)).map((entry, idx) => (
+                              <div key={`tum-${idx}-${day}`} className="text-sm text-gray-700">
+                                {levelIcons[entry.level]} {entry.level}: {entry.time}
+                              </div>
+                            ))}
+                          </li>
+                        )}
+                        {visibleTeams.size > 0 && teamPractice.some((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)) && (
+                          <li className="bg-yellow-50 shadow p-2 rounded">
+                            <p className="text-yellow-700 font-semibold mb-1">Team Practices</p>
+                            {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
+                              <div key={`team-${idx}-${day}`} className="text-sm text-gray-700">
+                                {entry.team}: 6:00 PM – 8:00 PM
+                              </div>
+                            ))}
+                          </li>
+                        )}
+                      </ul>
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
         </div>
 
-        {/* Upcoming Competitions - moved inside wrapper */}
-        <section> {/* Removed mt-10 */}
+        <section>
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Upcoming Competitions</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {competitions.slice(0, 2).map((comp) => (
@@ -182,8 +176,7 @@ export default function HomePage() {
             ))}
           </div>
         </section>
-
-      </div> {/* End of max-w-7xl mx-auto space-y-8 wrapper */}
+      </div>
     </main>
   );
 }
