@@ -8,7 +8,6 @@ export default function HomePage() {
   const [weekOffset, setWeekOffset] = useState(0);
   const [visibleLevels, setVisibleLevels] = useState(new Set());
   const [visibleTeams, setVisibleTeams] = useState(new Set());
-  // Changed from nextCompetition (single object) to upcomingCompetitions (array)
   const [upcomingCompetitions, setUpcomingCompetitions] = useState([]);
 
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
@@ -46,7 +45,6 @@ export default function HomePage() {
       .filter(comp => comp.parsedDate && isFuture(comp.parsedDate))
       .sort((a, b) => compareAsc(a.parsedDate, b.parsedDate));
 
-    // Set a slice of future competitions (e.g., up to 5) for the scrollable list
     setUpcomingCompetitions(futureCompetitions.slice(0, 5)); 
   }, []); 
 
@@ -127,6 +125,7 @@ export default function HomePage() {
         
         {/* Calendar Table */}
         <div className="overflow-x-auto bg-white rounded-lg shadow">
+            {/* ... Table ... */}
             <table className="min-w-full border-collapse">
               <thead>
                 <tr className="bg-pink-100">
@@ -141,11 +140,11 @@ export default function HomePage() {
                     <td key={day} className={`align-top p-2 border border-gray-200 w-1/7 ${dayIndex === 0 ? 'border-l-0' : ''} ${dayIndex === daysOfWeek.length - 1 ? 'border-r-0' : ''}`}>
                       <ul className="space-y-2">
                         {/* ... Tumbling and Team Practice list items ... */}
-                        {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
+                         {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
                           <li className="bg-pink-50 shadow-sm p-2 rounded">
                             <p className="text-pink-700 font-semibold text-sm mb-1">All Star Tumbling</p>
                             {tumblingSchedule.filter((entry) => entry.day === day && visibleLevels.has(entry.level)).map((entry, idx) => (
-                              <div key={`tum-${idx}-${day}`} className="text-xs text-gray-700">
+                              <div key={`tum-<span class="math-inline">\{idx\}\-</span>{day}`} className="text-xs text-gray-700">
                                 {levelIcons[entry.level]} {entry.level}: {entry.time}
                               </div>
                             ))}
@@ -155,7 +154,7 @@ export default function HomePage() {
                           <li className="bg-yellow-50 shadow-sm p-2 rounded">
                             <p className="text-yellow-700 font-semibold text-sm mb-1">Team Practices</p>
                             {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
-                              <div key={`team-${idx}-${day}`} className="text-xs text-gray-700">
+                              <div key={`team-<span class="math-inline">\{idx\}\-</span>{day}`} className="text-xs text-gray-700">
                                 {teamIcons[entry.team] && <span className="mr-1">{teamIcons[entry.team]}</span>}
                                 {entry.team}: 6:00 PM – 8:00 PM
                               </div>
@@ -170,10 +169,9 @@ export default function HomePage() {
             </table>
         </div>
         
-        {/* UPDATED Upcoming Competitions Section */}
+        {/* Upcoming Competitions Section */}
         <section>
           <div className="text-center mb-6">
-            {/* Changed heading to plural as we are showing a list */}
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Upcoming Competitions</h2>
             <Link to="/competitions" className="text-sm text-pink-600 hover:text-pink-800 hover:underline transition-colors">
               (View All Competitions)
@@ -181,19 +179,17 @@ export default function HomePage() {
           </div>
 
           {upcomingCompetitions.length > 0 ? (
-            // Horizontally scrollable container for competition cards
-            // Note: For a truly "no scrollbar" experience, you might need custom CSS like:
-            // .no-scrollbar::-webkit-scrollbar { display: none; }
-            // .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-            // and add 'no-scrollbar' class to the div below.
-            <div className="flex overflow-x-auto pb-4 pt-2 gap-6 snap-x snap-mandatory">
+            // UPDATED: Horizontally scrollable container
+            // Added px-4 (or px-6, px-8) for padding on the sides of the scrollable area
+            // Conditionally add 'justify-center' if only one competition card to display
+            <div className={`flex overflow-x-auto pb-4 pt-2 px-4 sm:px-6 gap-6 snap-x snap-mandatory ${
+                upcomingCompetitions.length === 1 ? 'justify-center' : ''
+            }`}>
               {upcomingCompetitions.map((comp) => (
                 <div
                   key={comp.id}
-                  // Each card: flex-shrink-0 is important for scrollable flex items.
-                  // w-80 (320px) or w-72 (288px) is a good starting width for mobile.
-                  // Adjust width for different screen sizes if desired.
-                  className="flex-shrink-0 w-80 snap-center bg-white shadow-xl rounded-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl flex flex-col items-center text-center"
+                  // Each card: flex-shrink-0 is important. w-80 or w-72 is a good start.
+                  className="flex-shrink-0 w-72 md:w-80 snap-center bg-white shadow-xl rounded-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl flex flex-col items-center text-center"
                 >
                   {comp.logo && (
                     <div className="w-24 h-24 mb-4 bg-gray-100 rounded-md flex items-center justify-center p-2 shadow-sm">
@@ -211,7 +207,7 @@ export default function HomePage() {
                   </p>
                   {comp.venue && (
                     <p className="text-gray-500 text-xs mb-3">
-                      📍 {comp.venue.name}{comp.venue.address.split(',').length > 1 ? `, ${comp.venue.address.split(',').slice(1, 2).join(',').trim()}` : ''} {/* Show only city if address is long */}
+                      📍 {comp.venue.name}{comp.venue.address.split(',').length > 1 ? `, ${comp.venue.address.split(',').slice(1, 2).join(',').trim()}` : ''}
                     </p>
                   )}
                   {comp.description && (
@@ -237,5 +233,3 @@ export default function HomePage() {
         </section>
       </div>
     </main>
-  );
-}
