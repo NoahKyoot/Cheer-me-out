@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Make sure Link is imported
+import { Link } from 'react-router-dom';
 import { addDays, format, startOfWeek } from 'date-fns';
 
-
 export default function HomePage() {
-
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const [weekOffset, setWeekOffset] = useState(0);
   const [visibleLevels, setVisibleLevels] = useState(new Set());
@@ -63,7 +61,6 @@ export default function HomePage() {
 
   const getDateForDay = (index) => format(addDays(weekStart, index), 'MMM d');
 
-
   return (
     <main className="min-h-screen p-6 bg-gray-50">
       <header className="text-center mb-8">
@@ -94,35 +91,34 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* MODIFIED SECTION FOR TEAM LINK AND BUTTONS */}
           <div className="text-center">
-            <h3 className="text-xl font-semibold text-yellow-700 mb-1"> {/* Reduced mb for tighter link/button group */}
+            <h3 className="text-xl font-semibold text-yellow-700 mb-1">
               <Link to="/teams" className="hover:text-yellow-500 hover:underline transition-colors duration-150 ease-in-out">
                 Memphis Pride Cheer Teams
               </Link>
             </h3>
-            <div className="flex flex-wrap justify-center items-center gap-4 mt-3"> {/* Added mt-3 for space below link */}
+            <div className="flex flex-wrap justify-center items-center gap-4 mt-3">
               {teamPractice.map((teamInfo) => (
                 <button
                   key={teamInfo.team}
                   onClick={() => toggleTeam(teamInfo.team)}
-                  className="rounded overflow-hidden w-20 h-20 border border-gray-300 hover:shadow-lg focus:outline-none"
+                  className={`rounded overflow-hidden w-20 h-20 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 ${
+                    visibleTeams.has(teamInfo.team) ? 'ring-4 ring-yellow-500 ring-inset bg-yellow-50 border-yellow-300' : 'bg-white border-gray-300'
+                  }`}
                   title={teamInfo.team}
                 >
                   <img
                     src={`/images/${teamInfo.team.replace(/ /g, '')}.png`}
                     alt={teamInfo.team}
-                    className={`w-full h-full object-cover ${visibleTeams.has(teamInfo.team) ? 'ring-4 ring-yellow-500 ring-inset' : ''}`}
+                    className="max-w-full max-h-full object-contain" // Changed to object-contain
                   />
                 </button>
               ))}
             </div>
           </div>
-          {/* END OF MODIFIED SECTION */}
         </div>
 
         <div className="overflow-x-auto">
-          {/* ... Table ... */}
             <table className="min-w-full border border-gray-300">
               <thead>
                 <tr className="bg-pink-100">
