@@ -131,9 +131,10 @@ export default function HomePage() {
                         ))}
                       </li>
                     )}
+
                     {visibleTeams.size > 0 && teamPractice.some((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)) && (
                       <li className="bg-yellow-50 shadow p-2 rounded">
-                        <p className="text-yellow-700 font-semibold mb-1">Team Practices</p>
+                        <p className="text-yellow-700 font-semibold mb-1 mt-4">Team Practices</p>
                         {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
                           <div key={`team-${idx}-${day}`} className="text-sm text-gray-700">{teamIcons[entry.team]} {entry.team}: 6:00 PM – 8:00 PM</div>
                         ))}
