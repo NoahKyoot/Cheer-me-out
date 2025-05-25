@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { addDays, format, startOfWeek } from 'date-fns';
 
-// No need to import BlazeLogo or MajorsLogo if they are in the public folder
+// No import statements are needed for images located in the public folder.
 
 export default function HomePage() {
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -14,11 +14,11 @@ export default function HomePage() {
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
 
   const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
-  // For Blaze and Majors, we will use images, so their icons here might be placeholders or not used for them.
+  // For Blaze and Majors, the icon defined here will be overridden by the image button.
   const teamIcons = {
-    Majors: '🌟', // Placeholder, will be replaced by image
+    Majors: '🌟',
     Legacy: '👑',
-    Blaze: '🔥', // Placeholder, will be replaced by image
+    Blaze: '🔥',
     Dynasty: '🏰',
     Reign: '💎',
     Prodigy: '🚀',
@@ -107,7 +107,7 @@ export default function HomePage() {
 
         <div className="text-center">
           <h3 className="text-xl font-semibold text-yellow-700 mb-3">Memphis Pride Cheer</h3>
-          <div className="flex flex-wrap justify-center items-center gap-2"> {/* Added items-center for vertical alignment if heights differ */}
+          <div className="flex flex-wrap justify-center items-center gap-2">
             {Object.keys(teamIcons).map((team) => {
               if (team === 'Blaze') {
                 return (
@@ -117,12 +117,14 @@ export default function HomePage() {
                     onClick={() => toggleTeam(team)}
                     className={`p-0.5 rounded focus:outline-none 
                                 ${visibleTeams.has(team) ? 'ring-2 ring-yellow-500 bg-yellow-100' : 'ring-1 ring-gray-300 hover:ring-yellow-400'}`}
-                    style={{ width: '60px', height: '40px' }} // Adjust size as needed
+                    // ** Adjust width and height as needed for your images **
+                    style={{ width: '60px', height: '40px' }}
                   >
                     <img
-                      src="/images/Blaze.png" // Directly use public path
+                      // ** CRITICAL: This path assumes Blaze.png is in YOUR_PROJECT/public/images/ **
+                      src="/images/Blaze.png"
                       alt="Blaze Team Logo"
-                      className="object-contain h-full w-full"
+                      className="object-contain h-full w-full" // Ensures image fits and maintains aspect ratio
                     />
                   </button>
                 );
@@ -134,12 +136,14 @@ export default function HomePage() {
                     onClick={() => toggleTeam(team)}
                     className={`p-0.5 rounded focus:outline-none 
                                 ${visibleTeams.has(team) ? 'ring-2 ring-yellow-500 bg-yellow-100' : 'ring-1 ring-gray-300 hover:ring-yellow-400'}`}
-                    style={{ width: '60px', height: '40px' }} // Adjust size as needed
+                    // ** Adjust width and height as needed for your images **
+                    style={{ width: '60px', height: '40px' }}
                   >
                     <img
-                      src="/images/Majors.png" // Directly use public path
+                      // ** CRITICAL: This path assumes Majors.png is in YOUR_PROJECT/public/images/ **
+                      src="/images/Majors.png"
                       alt="Majors Team Logo"
-                      className="object-contain h-full w-full"
+                      className="object-contain h-full w-full" // Ensures image fits and maintains aspect ratio
                     />
                   </button>
                 );
@@ -178,7 +182,8 @@ export default function HomePage() {
           </thead>
           <tbody>
             <tr>
-              {daysOfWeek.map((day) => (
+              {daysOfWeek.map((day) (
+                // ... rest of your table rendering ...
                 <td key={day} className="align-top p-2 border border-gray-300 w-1/7">
                   <ul className="space-y-2">
                     {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
@@ -197,6 +202,7 @@ export default function HomePage() {
                         ))}
                       </li>
                     )}
+                    {/* Add logic here to display "Specials" on the calendar if showSpecials is true and specials exist for this day */}
                   </ul>
                 </td>
               ))}
