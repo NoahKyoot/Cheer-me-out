@@ -61,6 +61,12 @@ export default function HomePage() {
   };
   const getDateForDay = (index) => format(addDays(weekStart, index), 'MMM d');
 
+  const handleShowMonth = () => {
+    console.log('"View Full Month Calendar" button clicked - implement functionality.');
+    // This function would eventually change the calendar view to a month view
+    // or navigate to a dedicated month calendar page.
+  };
+
   return (
     <main className="min-h-screen p-6 bg-slate-900 text-slate-200">
       <header className="text-center mb-8">
@@ -70,9 +76,8 @@ export default function HomePage() {
 
       <div className="max-w-7xl mx-auto space-y-8">
         
-        {/* Button Filters Section - ORDER UPDATED */}
+        {/* Button Filters Section */}
         <div className="space-y-6">
-          {/* Memphis Pride Cheer Teams Group - NOW FIRST */}
           <div className="text-center">
             <h3 className="text-xl font-semibold text-blue-400 mb-1">
               <Link to="/teams" className="hover:text-blue-300 hover:underline transition-colors duration-150 ease-in-out">
@@ -84,7 +89,7 @@ export default function HomePage() {
                 <button
                   key={teamInfo.team}
                   onClick={() => toggleTeam(teamInfo.team)}
-                  className={`flex-shrink-0 rounded overflow-hidden w-28 h-28 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
+                  className={`flex-shrink-0 rounded overflow-hidden w-24 h-24 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
                     visibleTeams.has(teamInfo.team) 
                       ? 'ring-4 ring-red-500 ring-inset bg-slate-700 border-red-500' 
                       : 'bg-slate-800 border-slate-600 hover:border-red-500'
@@ -100,8 +105,6 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-
-          {/* All Star Tumbling Levels Group - NOW SECOND */}
           <div className="text-center">
             <h3 className="text-xl font-semibold text-blue-400 mb-3">
               <Link to="/tumbling-levels" className="hover:text-blue-300 hover:underline transition-colors">
@@ -126,38 +129,52 @@ export default function HomePage() {
           </div>
         </div>
         
-        {/* Week Navigation */}
-        <div className="flex items-center justify-center gap-3 sm:gap-6 mb-4">
-          <button
-            onClick={() => setWeekOffset(weekOffset - 1)}
-            className="p-2 rounded-full hover:bg-slate-700 focus:bg-slate-600 focus:outline-none transition-colors"
-            aria-label="Previous Week"
-          >
-            <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
-          </button>
+        {/* Calendar Navigation Container */}
+        <div className="space-y-3 text-center"> {/* Groups week nav and month button */}
+          {/* Week Navigation (Arrows and Date Range) */}
+          <div className="flex items-center justify-center gap-3 sm:gap-6">
+            <button
+              onClick={() => setWeekOffset(weekOffset - 1)}
+              className="p-2 rounded-full hover:bg-slate-700 focus:bg-slate-600 focus:outline-none transition-colors"
+              aria-label="Previous Week"
+            >
+              <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
 
-          <div className="text-center flex-grow md:flex-grow-0">
-            <h4 className="text-lg sm:text-xl font-semibold text-slate-100 whitespace-nowrap">
-              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')}
-            </h4>
-            {weekOffset !== 0 && (
-              <button
-                onClick={() => setWeekOffset(0)}
-                className="text-xs text-red-500 hover:text-red-400 hover:underline focus:outline-none"
-              >
-                (Go to This Week)
-              </button>
-            )}
+            <div className="text-center flex-grow md:flex-grow-0">
+              <h4 className="text-lg sm:text-xl font-semibold text-slate-100 whitespace-nowrap">
+                {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')} {/* Completed date format */}
+              </h4>
+              {weekOffset !== 0 && (
+                <button
+                  onClick={() => setWeekOffset(0)}
+                  className="text-xs text-red-500 hover:text-red-400 hover:underline focus:outline-none"
+                >
+                  (Go to This Week)
+                </button>
+              )}
+            </div>
+
+            <button
+              onClick={() => setWeekOffset(weekOffset + 1)}
+              className="p-2 rounded-full hover:bg-slate-700 focus:bg-slate-600 focus:outline-none transition-colors"
+              aria-label="Next Week"
+            >
+              <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
           </div>
 
-          <button
-            onClick={() => setWeekOffset(weekOffset + 1)}
-            className="p-2 rounded-full hover:bg-slate-700 focus:bg-slate-600 focus:outline-none transition-colors"
-            aria-label="Next Week"
-          >
-            <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
-          </button>
-        </div>
+          {/* New "Show Entire Month" Button */}
+          <div> {/* Centered by parent's text-center */}
+            <button
+              onClick={handleShowMonth}
+              className="px-4 py-2 text-sm bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+            >
+              View Full Month Calendar
+            </button>
+          </div>
+        </div> {/* End of Calendar Navigation Group */}
+
 
         {/* Calendar Table */}
         <div className="overflow-x-auto bg-slate-800 rounded-lg shadow-md">
