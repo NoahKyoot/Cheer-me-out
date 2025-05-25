@@ -48,9 +48,9 @@ export default function HomePage() {
   ];
 
   const teamPractice = [
-    { team: 'Blaze', days: ['Mon', 'Wed'] },
     { team: 'Majors', days: ['Tue', 'Thu'] },
     { team: 'Legacy', days: ['Mon', 'Wed'] },
+    { team: 'Blaze', days: ['Mon', 'Wed'] },
     { team: 'Dynasty', days: ['Tue', 'Thu'] },
     { team: 'Reign', days: ['Mon', 'Wed'] },
     { team: 'Prodigy', days: ['Tue', 'Thu'] },
