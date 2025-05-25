@@ -144,7 +144,7 @@ export default function HomePage() {
                           <li className="bg-pink-50 shadow-sm p-2 rounded">
                             <p className="text-pink-700 font-semibold text-sm mb-1">All Star Tumbling</p>
                             {tumblingSchedule.filter((entry) => entry.day === day && visibleLevels.has(entry.level)).map((entry, idx) => (
-                              <div key={`tum-<span class="math-inline">\{idx\}\-</span>{day}`} className="text-xs text-gray-700">
+                              <div key={`tum-${idx}-${day}`} className="text-xs text-gray-700">
                                 {levelIcons[entry.level]} {entry.level}: {entry.time}
                               </div>
                             ))}
@@ -154,7 +154,7 @@ export default function HomePage() {
                           <li className="bg-yellow-50 shadow-sm p-2 rounded">
                             <p className="text-yellow-700 font-semibold text-sm mb-1">Team Practices</p>
                             {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
-                              <div key={`team-<span class="math-inline">\{idx\}\-</span>{day}`} className="text-xs text-gray-700">
+                              <div key={`team-${idx}-${day}`} className="text-xs text-gray-700">
                                 {teamIcons[entry.team] && <span className="mr-1">{teamIcons[entry.team]}</span>}
                                 {entry.team}: 6:00 PM – 8:00 PM
                               </div>
@@ -233,3 +233,5 @@ export default function HomePage() {
         </section>
       </div>
     </main>
+  );
+}
