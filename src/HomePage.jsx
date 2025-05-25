@@ -13,7 +13,6 @@ export default function HomePage() {
 
   const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
   const teamIcons = { Majors: '🌟', Legacy: '👑', Blaze: '🔥', Dynasty: '🏰', Reign: '💎', Prodigy: '🚀', 'Lady Legends': '🎀', 'Black Smack': '🖤', Inferno: '🔥' };
-  // Assuming a "Specials" icon, you can change it as needed
   const specialsIcon = '✨';
 
   const tumblingSchedule = [
@@ -77,40 +76,48 @@ export default function HomePage() {
         <button onClick={() => setWeekOffset(weekOffset + 1)} className="px-4 py-2 bg-pink-100 rounded">Next Week →</button>
       </div>
 
-      {/* Button Filters Section - Modified for two lines */}
-      <div className="space-y-3 mb-6"> {/* Increased bottom margin slightly */}
-        {/* Line 1: Level Toggles */}
-        <div className="flex flex-wrap justify-center gap-2">
-          {Object.keys(levelIcons).map((lvl) => (
-            <button
-              key={lvl}
-              onClick={() => toggleLevel(lvl)}
-              className={`px-4 py-2 rounded text-sm sm:text-base ${visibleLevels.has(lvl) ? 'bg-pink-600 text-white' : 'bg-pink-100 text-pink-800'}`}
-            >
-              {levelIcons[lvl]} {lvl}
-            </button>
-          ))}
+      {/* Button Filters Section - Modified with labels */}
+      <div className="space-y-6 mb-8"> {/* Main container for filter groups */}
+
+        {/* All Star Tumbling Levels Group */}
+        <div className="text-center">
+          <h3 className="text-xl font-semibold text-pink-600 mb-3">All Star Tumbling</h3> {/* Label */}
+          <div className="flex flex-wrap justify-center gap-2"> {/* Level Buttons */}
+            {Object.keys(levelIcons).map((lvl) => (
+              <button
+                key={lvl}
+                onClick={() => toggleLevel(lvl)}
+                className={`px-4 py-2 rounded text-sm sm:text-base ${visibleLevels.has(lvl) ? 'bg-pink-600 text-white' : 'bg-pink-100 text-pink-800'}`}
+              >
+                {levelIcons[lvl]} {lvl}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Line 2: Team Toggles and Specials Toggle */}
-        <div className="flex flex-wrap justify-center gap-2">
-          {Object.keys(teamIcons).map((team) => (
+        {/* Memphis Pride Cheer Teams & Specials Group */}
+        <div className="text-center">
+          <h3 className="text-xl font-semibold text-yellow-700 mb-3">Memphis Pride Cheer</h3> {/* Label */}
+          <div className="flex flex-wrap justify-center gap-2"> {/* Team and Specials Buttons */}
+            {Object.keys(teamIcons).map((team) => (
+              <button
+                key={team}
+                onClick={() => toggleTeam(team)}
+                className={`px-4 py-2 rounded text-sm sm:text-base ${visibleTeams.has(team) ? 'bg-yellow-600 text-white' : 'bg-yellow-100 text-yellow-800'}`}
+              >
+                {teamIcons[team]} {team}
+              </button>
+            ))}
             <button
-              key={team}
-              onClick={() => toggleTeam(team)}
-              className={`px-4 py-2 rounded text-sm sm:text-base ${visibleTeams.has(team) ? 'bg-yellow-600 text-white' : 'bg-yellow-100 text-yellow-800'}`}
+              key="specials"
+              onClick={() => setShowSpecials(!showSpecials)}
+              className={`px-4 py-2 rounded text-sm sm:text-base ${showSpecials ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-800'}`}
             >
-              {teamIcons[team]} {team}
+              {specialsIcon} Specials
             </button>
-          ))}
-          <button
-            key="specials"
-            onClick={() => setShowSpecials(!showSpecials)}
-            className={`px-4 py-2 rounded text-sm sm:text-base ${showSpecials ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-800'}`}
-          >
-            {specialsIcon} Specials
-          </button>
+          </div>
         </div>
+
       </div>
       {/* End of Button Filters Section */}
 
@@ -137,7 +144,7 @@ export default function HomePage() {
                       </li>
                     )}
                     {visibleTeams.size > 0 && teamPractice.some((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)) && (
-                      <li className="bg-yellow-50 shadow p-2 rounded"> {/* Retained the change from previous step: removed mt-2 */}
+                      <li className="bg-yellow-50 shadow p-2 rounded">
                         <p className="text-yellow-700 font-semibold mb-1">Team Practices</p>
                         {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
                           <div key={`team-${idx}-${day}`} className="text-sm text-gray-700">{teamIcons[entry.team]} {entry.team}: 6:00 PM – 8:00 PM</div>
