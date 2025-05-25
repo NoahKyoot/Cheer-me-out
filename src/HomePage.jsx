@@ -72,8 +72,14 @@ export default function HomePage() {
       </header>
 
       <div className="max-w-7xl mx-auto space-y-8">
-        
-        {/* Button Filters Section - Now appears before week navigation */}
+        {/* Week Navigation */}
+        <div className="flex justify-center gap-4">
+          <button onClick={() => setWeekOffset(weekOffset - 1)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">← Previous Week</button>
+          <button onClick={() => setWeekOffset(0)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">This Week</button>
+          <button onClick={() => setWeekOffset(weekOffset + 1)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">Next Week →</button>
+        </div>
+
+        {/* Button Filters Section */}
         <div className="space-y-6">
           <div className="text-center">
             <h3 className="text-xl font-semibold text-pink-600 mb-3">
@@ -121,13 +127,6 @@ export default function HomePage() {
           </div>
         </div>
         
-        {/* Week Navigation - MOVED to be above the calendar */}
-        <div className="flex justify-center gap-4 mb-4"> {/* Added mb-4 for spacing below it */}
-          <button onClick={() => setWeekOffset(weekOffset - 1)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">← Previous Week</button>
-          <button onClick={() => setWeekOffset(0)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">This Week</button>
-          <button onClick={() => setWeekOffset(weekOffset + 1)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">Next Week →</button>
-        </div>
-
         {/* Calendar Table */}
         <div className="overflow-x-auto bg-white rounded-lg shadow">
             <table className="min-w-full border-collapse">
@@ -172,7 +171,7 @@ export default function HomePage() {
             </table>
         </div>
         
-        {/* Upcoming Competition Section */}
+        {/* UPDATED "Next Up!" Competition Section */}
         <section>
           <div className="text-center mb-6">
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Next Up!</h2>
@@ -181,17 +180,40 @@ export default function HomePage() {
             </Link>
           </div>
           {nextCompetition ? (
-            <div className="max-w-lg mx-auto bg-white shadow-xl rounded-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl">
-              <h3 className="text-2xl font-bold text-pink-600 mb-3">{nextCompetition.name} - {nextCompetition.location}</h3>
-              <p className="text-gray-700 text-md mb-2">📅 <span className="font-medium">{nextCompetition.dateString}</span></p>
-              {nextCompetition.description && <p className="text-gray-600 text-sm mt-2 mb-4">{nextCompetition.description}</p>}
-              {nextCompetition.notes && <p className="text-xs text-gray-500 italic mt-2 mb-4">{nextCompetition.notes}</p>}
-              <Link
-                to={`/competitions/${nextCompetition.id}`}
-                className="inline-block bg-pink-500 text-white px-6 py-2 rounded-md font-medium hover:bg-pink-600 transition-colors"
-              >
-                View Details
-              </Link>
+            <div className="max-w-xl mx-auto bg-white shadow-xl rounded-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl flex flex-col sm:flex-row items-center sm:items-start gap-6">
+              {nextCompetition.logo && (
+                <div className="w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0 bg-gray-100 rounded-md flex items-center justify-center p-2 shadow-sm">
+                  <img
+                    src={`/images/competition-logos/${nextCompetition.logo}`}
+                    alt={`${nextCompetition.brand || nextCompetition.eventName} Logo`}
+                    className="max-h-full max-w-full object-contain"
+                  />
+                </div>
+              )}
+              <div className={`text-center sm:text-left flex-grow ${!nextCompetition.logo ? 'w-full' : ''}`}> {/* Allow text to take full width if no logo */}
+                <h3 className="text-2xl font-bold text-pink-600 mb-1">{nextCompetition.eventName}</h3>
+                {nextCompetition.brand && <p className="text-sm text-gray-500 mb-2">{nextCompetition.brand}</p>}
+                <p className="text-gray-700 text-md mb-1">
+                  📅 <span className="font-medium">{nextCompetition.fullDates || nextCompetition.dateString}</span>
+                </p>
+                {nextCompetition.venue && (
+                  <p className="text-gray-600 text-sm mb-3">
+                    📍 {nextCompetition.venue.name}{nextCompetition.venue.address.split(',').length > 1 ? `, ${nextCompetition.venue.address.split(',').slice(1, 3).join(',').trim()}` : ''}
+                  </p>
+                )}
+                {nextCompetition.description && (
+                  <p className="text-gray-600 text-sm mt-2 mb-4 line-clamp-3 hover:line-clamp-none transition-all"> {/* Show more on hover */}
+                    {nextCompetition.description}
+                  </p>
+                )}
+                {nextCompetition.notes && <p className="text-xs text-gray-500 italic mb-4">{nextCompetition.notes}</p>}
+                <Link
+                  to={`/competitions/${nextCompetition.id}`}
+                  className="inline-block bg-pink-500 text-white px-6 py-2 rounded-md font-medium hover:bg-pink-600 transition-colors"
+                >
+                  View Details
+                </Link>
+              </div>
             </div>
           ) : (
             <div className="text-center text-gray-600 py-8">
