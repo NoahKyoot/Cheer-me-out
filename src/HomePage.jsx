@@ -8,7 +8,8 @@ export default function HomePage() {
   const [weekOffset, setWeekOffset] = useState(0);
   const [visibleLevels, setVisibleLevels] = useState(new Set());
   const [visibleTeams, setVisibleTeams] = useState(new Set());
-  const [nextCompetition, setNextCompetition] = useState(null);
+  // Changed from nextCompetition (single object) to upcomingCompetitions (array)
+  const [upcomingCompetitions, setUpcomingCompetitions] = useState([]);
 
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
 
@@ -45,11 +46,8 @@ export default function HomePage() {
       .filter(comp => comp.parsedDate && isFuture(comp.parsedDate))
       .sort((a, b) => compareAsc(a.parsedDate, b.parsedDate));
 
-    if (futureCompetitions.length > 0) {
-      setNextCompetition(futureCompetitions[0]);
-    } else {
-      setNextCompetition(null);
-    }
+    // Set a slice of future competitions (e.g., up to 5) for the scrollable list
+    setUpcomingCompetitions(futureCompetitions.slice(0, 5)); 
   }, []); 
 
   const toggleLevel = (lvl) => { 
@@ -111,9 +109,6 @@ export default function HomePage() {
                 <button
                   key={teamInfo.team}
                   onClick={() => toggleTeam(teamInfo.team)}
-                  // UPDATED: Team image buttons are now w-24 h-24 by default (for mobile scroll)
-                  // and also sm:w-24 sm:h-24 for consistency when wrapping.
-                  // You can make sm: size different if you prefer (e.g., sm:w-28 sm:h-28)
                   className={`flex-shrink-0 rounded overflow-hidden w-24 h-24 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
                     visibleTeams.has(teamInfo.team) ? 'ring-4 ring-yellow-500 ring-inset bg-yellow-50 border-yellow-300' : 'bg-white border-gray-300 hover:border-yellow-400'
                   }`}
@@ -145,6 +140,7 @@ export default function HomePage() {
                   {daysOfWeek.map((day, dayIndex) => (
                     <td key={day} className={`align-top p-2 border border-gray-200 w-1/7 ${dayIndex === 0 ? 'border-l-0' : ''} ${dayIndex === daysOfWeek.length - 1 ? 'border-r-0' : ''}`}>
                       <ul className="space-y-2">
+                        {/* ... Tumbling and Team Practice list items ... */}
                         {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
                           <li className="bg-pink-50 shadow-sm p-2 rounded">
                             <p className="text-pink-700 font-semibold text-sm mb-1">All Star Tumbling</p>
@@ -174,49 +170,63 @@ export default function HomePage() {
             </table>
         </div>
         
-        {/* "Next Up!" Competition Section */}
+        {/* UPDATED Upcoming Competitions Section */}
         <section>
           <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">Next Up!</h2>
+            {/* Changed heading to plural as we are showing a list */}
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">Upcoming Competitions</h2>
             <Link to="/competitions" className="text-sm text-pink-600 hover:text-pink-800 hover:underline transition-colors">
               (View All Competitions)
             </Link>
           </div>
-          {nextCompetition ? (
-            <div className="max-w-xl mx-auto bg-white shadow-xl rounded-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl flex flex-col sm:flex-row items-center sm:items-start gap-6">
-              {nextCompetition.logo && (
-                <div className="w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0 bg-gray-100 rounded-md flex items-center justify-center p-2 shadow-sm">
-                  <img
-                    src={`/images/competition-logos/${nextCompetition.logo}`}
-                    alt={`${nextCompetition.brand || nextCompetition.eventName} Logo`}
-                    className="max-h-full max-w-full object-contain"
-                  />
-                </div>
-              )}
-              <div className={`text-center sm:text-left flex-grow ${!nextCompetition.logo ? 'w-full' : ''}`}>
-                <h3 className="text-2xl font-bold text-pink-600 mb-1">{nextCompetition.eventName}</h3>
-                {nextCompetition.brand && <p className="text-sm text-gray-500 mb-2">{nextCompetition.brand}</p>}
-                <p className="text-gray-700 text-md mb-1">
-                  📅 <span className="font-medium">{nextCompetition.fullDates || nextCompetition.dateString}</span>
-                </p>
-                {nextCompetition.venue && (
-                  <p className="text-gray-600 text-sm mb-3">
-                    📍 {nextCompetition.venue.name}{nextCompetition.venue.address.split(',').length > 1 ? `, ${nextCompetition.venue.address.split(',').slice(1, 3).join(',').trim()}` : ''}
-                  </p>
-                )}
-                {nextCompetition.description && (
-                  <p className="text-gray-600 text-sm mt-2 mb-4 line-clamp-3 hover:line-clamp-none transition-all">
-                    {nextCompetition.description}
-                  </p>
-                )}
-                {nextCompetition.notes && <p className="text-xs text-gray-500 italic mb-4">{nextCompetition.notes}</p>}
-                <Link
-                  to={`/competitions/${nextCompetition.id}`}
-                  className="inline-block bg-pink-500 text-white px-6 py-2 rounded-md font-medium hover:bg-pink-600 transition-colors"
+
+          {upcomingCompetitions.length > 0 ? (
+            // Horizontally scrollable container for competition cards
+            // Note: For a truly "no scrollbar" experience, you might need custom CSS like:
+            // .no-scrollbar::-webkit-scrollbar { display: none; }
+            // .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+            // and add 'no-scrollbar' class to the div below.
+            <div className="flex overflow-x-auto pb-4 pt-2 gap-6 snap-x snap-mandatory">
+              {upcomingCompetitions.map((comp) => (
+                <div
+                  key={comp.id}
+                  // Each card: flex-shrink-0 is important for scrollable flex items.
+                  // w-80 (320px) or w-72 (288px) is a good starting width for mobile.
+                  // Adjust width for different screen sizes if desired.
+                  className="flex-shrink-0 w-80 snap-center bg-white shadow-xl rounded-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl flex flex-col items-center text-center"
                 >
-                  View Details
-                </Link>
-              </div>
+                  {comp.logo && (
+                    <div className="w-24 h-24 mb-4 bg-gray-100 rounded-md flex items-center justify-center p-2 shadow-sm">
+                      <img
+                        src={`/images/competition-logos/${comp.logo}`}
+                        alt={`${comp.brand || comp.eventName} Logo`}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
+                  )}
+                  <h3 className="text-xl font-bold text-pink-600 mb-1 line-clamp-2">{comp.eventName}</h3>
+                  {comp.brand && <p className="text-xs text-gray-400 mb-2">{comp.brand}</p>}
+                  <p className="text-gray-700 text-sm mb-1">
+                    📅 <span className="font-medium">{comp.fullDates || comp.dateString}</span>
+                  </p>
+                  {comp.venue && (
+                    <p className="text-gray-500 text-xs mb-3">
+                      📍 {comp.venue.name}{comp.venue.address.split(',').length > 1 ? `, ${comp.venue.address.split(',').slice(1, 2).join(',').trim()}` : ''} {/* Show only city if address is long */}
+                    </p>
+                  )}
+                  {comp.description && (
+                    <p className="text-gray-600 text-xs mt-1 mb-3 line-clamp-3 flex-grow">
+                      {comp.description}
+                    </p>
+                  )}
+                  <Link
+                    to={`/competitions/${comp.id}`}
+                    className="mt-auto inline-block bg-pink-500 text-white px-5 py-2 rounded-md text-sm font-medium hover:bg-pink-600 transition-colors"
+                  >
+                    View Details
+                  </Link>
+                </div>
+              ))}
             </div>
           ) : (
             <div className="text-center text-gray-600 py-8">
