@@ -12,7 +12,6 @@ export default function HomePage() {
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
 
   const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
-
   const teamIcons = { Majors: '🌟', Legacy: '👑', Blaze: '🔥', Dynasty: '🏰', Reign: '💎', Prodigy: '🚀', 'Lady Legends': '🎀', 'Black Smack': '🖤', Inferno: '🔥' };
 
   const tumblingSchedule = [
@@ -42,12 +41,6 @@ export default function HomePage() {
     { team: 'Lady Legends', days: ['Mon', 'Wed'] },
     { team: 'Black Smack', days: ['Tue', 'Thu'] },
     { team: 'Inferno', days: ['Mon', 'Wed'] }
-  ];
-
-  const specialEvents = [
-    { name: 'Choreography', date: 'July 21-25, 2025 (Mini, Youth, Juniors, Seniors)' },
-    { name: 'Team Bonding', date: 'July 26, 2025' },
-    { name: 'Christmas/Holiday Parties', date: 'December 2025' }
   ];
 
   const competitions = [
@@ -93,21 +86,7 @@ export default function HomePage() {
             {teamIcons[team]} {team}
           </button>
         ))}
-        <button onClick={() => setShowSpecials(!showSpecials)} className={`px-4 py-2 rounded ${showSpecials ? 'bg-green-600 text-white' : 'bg-green-100 text-green-800'}`}>
-          🎉 Specials
-        </button>
       </div>
-
-      {showSpecials && (
-        <section className="bg-green-50 p-4 rounded shadow mb-6">
-          <h2 className="text-xl font-semibold text-green-700 mb-2">Special Events</h2>
-          <ul className="list-disc pl-5 space-y-1">
-            {specialEvents.map((event, idx) => (
-              <li key={idx}><span className="font-bold">{event.name}:</span> {event.date}</li>
-            ))}
-          </ul>
-        </section>
-      )}
 
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-300">
@@ -122,7 +101,7 @@ export default function HomePage() {
             <tr>
               {daysOfWeek.map((day) => (
                 <td key={day} className="align-top p-2 border border-gray-300 w-1/7">
-                  <ul className="space-y-4">
+                  <ul className="space-y-2">
                     {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
                       <li className="bg-white shadow p-2 rounded">
                         <p className="text-pink-600 font-semibold mb-1">All Star Tumbling</p>
@@ -131,10 +110,9 @@ export default function HomePage() {
                         ))}
                       </li>
                     )}
-
                     {visibleTeams.size > 0 && teamPractice.some((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)) && (
-                      <li className="bg-yellow-50 shadow p-2 rounded">
-                        <p className="text-yellow-700 font-semibold mb-1 mt-4">Team Practices</p>
+                      <li className="bg-yellow-50 shadow p-2 rounded mt-2">
+                        <p className="text-yellow-700 font-semibold mb-1">Team Practices</p>
                         {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
                           <div key={`team-${idx}-${day}`} className="text-sm text-gray-700">{teamIcons[entry.team]} {entry.team}: 6:00 PM – 8:00 PM</div>
                         ))}
