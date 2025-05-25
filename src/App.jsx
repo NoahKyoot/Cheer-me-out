@@ -1,7 +1,10 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import HomePage from './HomePage';
+import TeamsPage from './TeamsPage'; // <-- Import the new TeamsPage component
+import TeamDetailPage from './TeamDetailPage'; // <-- Import the new TeamDetailPage component
 
+// Your existing CompetitionDetail component
 function CompetitionDetail() {
   return (
     <div className="min-h-screen bg-white p-10 text-center">
@@ -12,6 +15,7 @@ function CompetitionDetail() {
   );
 }
 
+// Your existing NotFound component
 function NotFound() {
   return (
     <div className="min-h-screen bg-white p-10 text-center">
@@ -27,6 +31,8 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/teams" element={<TeamsPage />} /> {/* <-- New route for all teams page */}
+        <Route path="/teams/:teamSlug" element={<TeamDetailPage />} /> {/* <-- New dynamic route for specific team page */}
         <Route path="/competitions/:id" element={<CompetitionDetail />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
