@@ -35,8 +35,6 @@ export default function HomePage() {
     { team: 'Inferno', days: ['Mon', 'Wed'] }
   ];
 
-  // Removed unused 'competitionsForHomepage' variable
-
   useEffect(() => {
     const now = new Date();
     const futureCompetitions = allCompetitions
@@ -52,7 +50,7 @@ export default function HomePage() {
     } else {
       setNextCompetition(null);
     }
-  }, []); // Runs once on mount
+  }, []); 
 
   const toggleLevel = (lvl) => { 
     const updated = new Set(visibleLevels);
@@ -74,15 +72,10 @@ export default function HomePage() {
       </header>
 
       <div className="max-w-7xl mx-auto space-y-8">
-        <div className="flex justify-center gap-4">
-          <button onClick={() => setWeekOffset(weekOffset - 1)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">← Previous Week</button>
-          <button onClick={() => setWeekOffset(0)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">This Week</button>
-          <button onClick={() => setWeekOffset(weekOffset + 1)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">Next Week →</button>
-        </div>
-
+        
+        {/* Button Filters Section - Now appears before week navigation */}
         <div className="space-y-6">
           <div className="text-center">
-            {/* UPDATED: "All Star Tumbling" heading is now a link */}
             <h3 className="text-xl font-semibold text-pink-600 mb-3">
               <Link to="/tumbling-levels" className="hover:text-pink-400 hover:underline transition-colors">
                 All Star Tumbling
@@ -128,6 +121,14 @@ export default function HomePage() {
           </div>
         </div>
         
+        {/* Week Navigation - MOVED to be above the calendar */}
+        <div className="flex justify-center gap-4 mb-4"> {/* Added mb-4 for spacing below it */}
+          <button onClick={() => setWeekOffset(weekOffset - 1)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">← Previous Week</button>
+          <button onClick={() => setWeekOffset(0)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">This Week</button>
+          <button onClick={() => setWeekOffset(weekOffset + 1)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">Next Week →</button>
+        </div>
+
+        {/* Calendar Table */}
         <div className="overflow-x-auto bg-white rounded-lg shadow">
             <table className="min-w-full border-collapse">
               <thead>
@@ -171,6 +172,7 @@ export default function HomePage() {
             </table>
         </div>
         
+        {/* Upcoming Competition Section */}
         <section>
           <div className="text-center mb-6">
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Next Up!</h2>
