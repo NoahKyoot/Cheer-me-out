@@ -5,21 +5,20 @@ export const allCompetitions = [
     id: 'cheersport-memphis-2025',
     eventName: 'CHEERSPORT - Memphis - Classic - DI/DII',
     brand: 'Cheersport',
-    logo: 'CS-logo-250.png', // Assuming it's in public/images/competition-logos/
-    dateString: 'November 9, 2025', // Human-readable display for cards
-    sortableDate: '2025-11-09',   // YYYY-MM-DD for sorting and isFuture checks
-    fullDates: '11/9/2025 - 11/9/2025', // More explicit date display for detail page
+    logo: 'CS-logo-250.png', // From your previous info
+    dateString: 'November 9, 2025',
+    sortableDate: '2025-11-09',
+    fullDates: '11/9/2025 - 11/9/2025',
     venue: {
       name: 'Memphis Sports & Events Center',
       address: '995 Early Maxwell Blvd, Memphis, TN, 38104, US'
     },
-    scheduleNotes: ['Doors Open - 7:00 AM (Please verify day if event is Sunday)'], // User provided "Monday"
+    scheduleNotes: ['Doors Open - 7:00 AM (Please verify day if event is Sunday)'],
     description: 'A major regional classic competition by Cheersport.',
-    notes: 'For Minis, Youth, Juniors, and Seniors.', // General eligibility
+    notes: 'For Minis, Youth, Juniors, and Seniors.',
     results: {
-      // '2025' results would be populated as the event happens
       '2025': [], 
-      '2024': [ // Results you provided
+      '2024': [
         { teamName: 'Memphis Pride Cheer Legacy', level: 'L1 Youth', score: 87.9130 },
         { teamName: 'Memphis Pride Cheer Dynasty', level: 'L1 Junior', score: 91.3493 },
         { teamName: 'Memphis Pride Cheer Blaze', level: 'L2 Youth', score: 90.3000 },
@@ -33,32 +32,29 @@ export const allCompetitions = [
   },
   {
     id: 'deep-south-pigeon-forge-2025',
-    eventName: 'Deep South Nationals', // Assuming a more specific name, adjust if needed
+    eventName: 'Deep South Nationals',
     brand: 'Deep South',
-    logo: null, // Add logo filename if available
+    logo: null, // No logo provided for this one yet
     dateString: 'December 13-14, 2025',
     sortableDate: '2025-12-13',
     fullDates: '12/13/2025 - 12/14/2025',
-    venue: {
-      name: 'LeConte Center (Example)', // Example, please update
-      address: 'Pigeon Forge, TN' // Please update with full address
-    },
+    venue: { name: 'LeConte Center (Example)', address: 'Pigeon Forge, TN' },
     scheduleNotes: [],
     description: 'A festive competition in the Smokies.',
     notes: 'For Minis, Youth, Juniors, and Seniors.',
-    results: {'2025': [], '2024': [] } // Placeholder for results
+    results: {'2025': [], '2024': [] }
   },
   {
     id: 'battle-under-big-top-atlanta-2025',
     eventName: 'Battle Under the Big Top',
-    brand: 'Unknown Brand', // Please update brand
-    logo: null,
+    brand: 'ASC', // Assuming ASC from logo ASC-1.png, please verify/update
+    logo: 'ASC-1.png', // UPDATED
     dateString: 'December 13-14, 2025',
     sortableDate: '2025-12-13',
     fullDates: '12/13/2025 - 12/14/2025',
     venue: {
       name: 'Venue Name (Example)',
-      address: 'Atlanta, GA' // Please update with full address
+      address: 'Atlanta, GA'
     },
     scheduleNotes: [],
     description: 'A spectacular themed event.',
@@ -69,13 +65,13 @@ export const allCompetitions = [
     id: 'athletic-championships-chattanooga-2026',
     eventName: 'Athletic Championships',
     brand: 'Athletic Championships',
-    logo: null,
+    logo: 'ATH-1.png', // UPDATED
     dateString: 'January 24-25, 2026',
     sortableDate: '2026-01-24',
     fullDates: '1/24/2026 - 1/25/2026',
     venue: {
       name: 'Venue Name (Example)',
-      address: 'Chattanooga, TN' // Please update
+      address: 'Chattanooga, TN'
     },
     scheduleNotes: [],
     description: 'Showcase your athletic prowess!',
@@ -85,14 +81,14 @@ export const allCompetitions = [
   {
     id: 'cheer-expo-pigeon-forge-2026',
     eventName: 'Cheer Expo',
-    brand: 'Cheer Expo', // Assuming brand
+    brand: 'Cheer Expo',
     logo: null,
     dateString: 'January 31 - February 1, 2026',
     sortableDate: '2026-01-31',
     fullDates: '1/31/2026 - 2/1/2026',
     venue: {
       name: 'Venue Name (Example)',
-      address: 'Pigeon Forge, TN' // Please update
+      address: 'Pigeon Forge, TN'
     },
     scheduleNotes: [],
     description: 'Experience the best in cheerleading.',
@@ -109,7 +105,7 @@ export const allCompetitions = [
     fullDates: '2/7/2026',
     venue: {
       name: 'Venue Name (Example)',
-      address: 'Memphis, TN' // Please update
+      address: 'Memphis, TN'
     },
     scheduleNotes: [],
     description: 'A classic NCA event.',
@@ -118,15 +114,15 @@ export const allCompetitions = [
   },
   {
     id: 'deep-south-biloxi-2026',
-    eventName: 'Deep South Showdown', // Example specific name
-    brand: 'Deep South',
-    logo: null,
+    eventName: 'Deep South Glow Tour', // Updated eventName to reflect logo if appropriate
+    brand: 'Deep South', // Or "Glow Tour" if that's more accurate
+    logo: 'Glow_Tour_Biloxi.png', // UPDATED
     dateString: 'February 14-15, 2026',
     sortableDate: '2026-02-14',
     fullDates: '2/14/2026 - 2/15/2026',
     venue: {
       name: 'Venue Name (Example)',
-      address: 'Biloxi, MS' // Please update
+      address: 'Biloxi, MS'
     },
     scheduleNotes: [],
     description: 'Cheer competition on the coast.',
@@ -135,24 +131,24 @@ export const allCompetitions = [
   },
   {
     id: 'uca-nationals-orlando-2026',
-    eventName: 'UCA National High School Cheerleading Championship', // More specific
+    eventName: 'UCA National High School Cheerleading Championship',
     brand: 'UCA',
-    logo: null, // Add official UCA logo if desired
+    logo: null,
     dateString: 'March 14-15, 2026',
     sortableDate: '2026-03-14',
     fullDates: '3/14/2026 - 3/15/2026',
     venue: {
-      name: 'ESPN Wide World of Sports Complex (Typically)', // Example
-      address: 'Orlando, FL' // Please update
+      name: 'ESPN Wide World of Sports Complex (Typically)',
+      address: 'Orlando, FL'
     },
     scheduleNotes: [],
     description: 'The prestigious UCA National Championship.',
-    notes: 'For Youth, Juniors, and Seniors.', // Specific note from your list
+    notes: 'For Youth, Juniors, and Seniors.',
     results: {'2026': [], '2025': [] }
   },
   {
     id: 'one-up-nashville-2026',
-    eventName: 'One Up Championships', // More specific
+    eventName: 'One Up Championships',
     brand: 'One Up',
     logo: null,
     dateString: 'March 28-30, 2026',
@@ -160,12 +156,11 @@ export const allCompetitions = [
     fullDates: '3/28/2026 - 3/30/2026',
     venue: {
       name: 'Venue Name (Example)',
-      address: 'Nashville, TN' // Please update
+      address: 'Nashville, TN'
     },
     scheduleNotes: [],
     description: 'A highly competitive championship event.',
-    notes: 'For Juniors and Seniors only.', // Specific note from your list
+    notes: 'For Juniors and Seniors only.',
     results: {'2026': [], '2025': [] }
   }
-  // Add any other competitions from your list here, following the new structure.
 ];
