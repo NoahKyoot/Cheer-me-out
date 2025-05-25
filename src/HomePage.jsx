@@ -7,7 +7,6 @@ export default function HomePage() {
   const [weekOffset, setWeekOffset] = useState(0);
   const [visibleLevels, setVisibleLevels] = useState(new Set());
   const [visibleTeams, setVisibleTeams] = useState(new Set());
-  const [showSpecials, setShowSpecials] = useState(false);
 
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
 
@@ -91,7 +90,7 @@ export default function HomePage() {
     <main className="min-h-screen p-6 bg-gray-50 space-y-8">
       <header className="text-center">
         <h1 className="text-4xl font-bold text-pink-600 mb-2">Cheer Me Out</h1>
-        <p className="text-lg text-gray-700">Weekly Calendar: Tumbling, Practice & Specials</p>
+        <p className="text-lg text-gray-700">Weekly Calendar: Tumbling, Team Practices & Competitions</p>
       </header>
 
       <div className="flex justify-center gap-4 mb-4">
@@ -139,7 +138,7 @@ export default function HomePage() {
                   <ul className="space-y-2">
                     {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
                       <li className="bg-white shadow p-2 rounded">
-                        <p className="text-pink-600 font-semibold mb-1">Tumbling Classes</p>
+                        <p className="text-pink-600 font-semibold mb-1">All Star Tumbling</p>
                         {tumblingSchedule
                           .filter((entry) => entry.day === day && visibleLevels.has(entry.level))
                           .map((entry, idx) => (
