@@ -106,14 +106,13 @@ export default function HomePage() {
                 Memphis Pride Cheer Teams
               </Link>
             </h3>
-            {/* UPDATED: Wrapper for team image buttons for better mobile responsiveness */}
             <div className="flex items-center overflow-x-auto py-2 gap-3 sm:flex-wrap sm:justify-center sm:overflow-x-visible sm:gap-4 mt-3">
               {teamPractice.map((teamInfo) => (
                 <button
                   key={teamInfo.team}
                   onClick={() => toggleTeam(teamInfo.team)}
                   // UPDATED: Responsive sizing for team image buttons
-                  className={`flex-shrink-0 rounded overflow-hidden w-16 h-16 sm:w-20 sm:h-20 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
+                  className={`flex-shrink-0 rounded overflow-hidden w-20 h-20 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
                     visibleTeams.has(teamInfo.team) ? 'ring-4 ring-yellow-500 ring-inset bg-yellow-50 border-yellow-300' : 'bg-white border-gray-300 hover:border-yellow-400'
                   }`}
                   title={teamInfo.team}
@@ -129,8 +128,9 @@ export default function HomePage() {
           </div>
         </div>
         
-        {/* Calendar Table (directly below filters and week nav) */}
+        {/* Calendar Table */}
         <div className="overflow-x-auto bg-white rounded-lg shadow">
+            {/* ... Table structure ... */}
             <table className="min-w-full border-collapse">
               <thead>
                 <tr className="bg-pink-100">
