@@ -7,13 +7,8 @@ export default function HomePage() {
   const [weekOffset, setWeekOffset] = useState(0);
   const [visibleLevels, setVisibleLevels] = useState(new Set());
   const [visibleTeams, setVisibleTeams] = useState(new Set());
-  const [showSpecials, setShowSpecials] = useState(false);
 
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
-
-  const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
-  const teamIcons = { Majors: '🌟', Legacy: '👑', Blaze: '🔥', Dynasty: '🏰', Reign: '💎', Prodigy: '🚀', 'Lady Legends': '🎀', 'Black Smack': '🖤', Inferno: '🔥' };
-  const specialsIcon = '✨';
 
   const tumblingSchedule = [
     { level: 'Level 3', day: 'Mon', time: '5:00 PM – 6:00 PM' },
@@ -34,14 +29,8 @@ export default function HomePage() {
   ];
 
   const teamPractice = [
-    { team: 'Legacy', days: ['Tue', 'Thu'] },
     { team: 'Blaze', days: ['Mon', 'Wed'] },
-    { team: 'Dynasty', days: ['Mon', 'Wed'] },
-    { team: 'Reign', days: ['Tue', 'Thu'] },
-    { team: 'Prodigy', days: ['Mon', 'Wed'] },
-    { team: 'Lady Legends', days: ['Mon', 'Wed'] },
-    { team: 'Black Smack', days: ['Tue', 'Thu'] },
-    { team: 'Inferno', days: ['Mon', 'Wed'] }
+    { team: 'Majors', days: ['Tue', 'Thu'] }
   ];
 
   const competitions = [
@@ -67,7 +56,7 @@ export default function HomePage() {
     <main className="min-h-screen p-6 bg-gray-50 space-y-8">
       <header className="text-center">
         <h1 className="text-4xl font-bold text-pink-600 mb-2">Cheer Me Out</h1>
-        <p className="text-lg text-gray-700">Weekly Calendar: All Star Tumbling, Team Practices & Specials</p>
+        <p className="text-lg text-gray-700">Weekly Calendar with Image Buttons</p>
       </header>
 
       <div className="flex justify-center gap-4 mb-4">
@@ -76,50 +65,14 @@ export default function HomePage() {
         <button onClick={() => setWeekOffset(weekOffset + 1)} className="px-4 py-2 bg-pink-100 rounded">Next Week →</button>
       </div>
 
-      {/* Button Filters Section - Modified with labels */}
-      <div className="space-y-6 mb-8"> {/* Main container for filter groups */}
-
-        {/* All Star Tumbling Levels Group */}
-        <div className="text-center">
-          <h3 className="text-xl font-semibold text-pink-600 mb-3">All Star Tumbling</h3> {/* Label */}
-          <div className="flex flex-wrap justify-center gap-2"> {/* Level Buttons */}
-            {Object.keys(levelIcons).map((lvl) => (
-              <button
-                key={lvl}
-                onClick={() => toggleLevel(lvl)}
-                className={`px-4 py-2 rounded text-sm sm:text-base ${visibleLevels.has(lvl) ? 'bg-pink-600 text-white' : 'bg-pink-100 text-pink-800'}`}
-              >
-                {levelIcons[lvl]} {lvl}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Memphis Pride Cheer Teams & Specials Group */}
-        <div className="text-center">
-          <h3 className="text-xl font-semibold text-yellow-700 mb-3">Memphis Pride Cheer</h3> {/* Label */}
-          <div className="flex flex-wrap justify-center gap-2"> {/* Team and Specials Buttons */}
-            {Object.keys(teamIcons).map((team) => (
-              <button
-                key={team}
-                onClick={() => toggleTeam(team)}
-                className={`px-4 py-2 rounded text-sm sm:text-base ${visibleTeams.has(team) ? 'bg-yellow-600 text-white' : 'bg-yellow-100 text-yellow-800'}`}
-              >
-                {teamIcons[team]} {team}
-              </button>
-            ))}
-            <button
-              key="specials"
-              onClick={() => setShowSpecials(!showSpecials)}
-              className={`px-4 py-2 rounded text-sm sm:text-base ${showSpecials ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-800'}`}
-            >
-              {specialsIcon} Specials
-            </button>
-          </div>
-        </div>
-
+      <div className="flex flex-wrap justify-center gap-4 mb-6">
+        <button onClick={() => toggleTeam('Blaze')} className="rounded overflow-hidden">
+          <img src="/images/Blaze.png" alt="Blaze" className={`w-16 h-16 object-cover ${visibleTeams.has('Blaze') ? 'ring-4 ring-yellow-500' : ''}`} />
+        </button>
+        <button onClick={() => toggleTeam('Majors')} className="rounded overflow-hidden">
+          <img src="/images/Majors.png" alt="Majors" className={`w-16 h-16 object-cover ${visibleTeams.has('Majors') ? 'ring-4 ring-yellow-500' : ''}`} />
+        </button>
       </div>
-      {/* End of Button Filters Section */}
 
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-300">
@@ -135,23 +88,14 @@ export default function HomePage() {
               {daysOfWeek.map((day) => (
                 <td key={day} className="align-top p-2 border border-gray-300 w-1/7">
                   <ul className="space-y-2">
-                    {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
-                      <li className="bg-white shadow p-2 rounded">
-                        <p className="text-pink-600 font-semibold mb-1">All Star Tumbling</p>
-                        {tumblingSchedule.filter((entry) => entry.day === day && visibleLevels.has(entry.level)).map((entry, idx) => (
-                          <div key={`tum-${idx}-${day}`} className="text-sm text-gray-700">{levelIcons[entry.level]} {entry.level}: {entry.time}</div>
-                        ))}
-                      </li>
-                    )}
                     {visibleTeams.size > 0 && teamPractice.some((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)) && (
                       <li className="bg-yellow-50 shadow p-2 rounded">
                         <p className="text-yellow-700 font-semibold mb-1">Team Practices</p>
                         {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
-                          <div key={`team-${idx}-${day}`} className="text-sm text-gray-700">{teamIcons[entry.team]} {entry.team}: 6:00 PM – 8:00 PM</div>
+                          <div key={`team-${idx}-${day}`} className="text-sm text-gray-700">{entry.team}: 6:00 PM – 8:00 PM</div>
                         ))}
                       </li>
                     )}
-                    {/* Add logic here to display "Specials" on the calendar if showSpecials is true and specials exist for this day */}
                   </ul>
                 </td>
               ))}
