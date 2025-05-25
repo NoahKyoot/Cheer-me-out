@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Make sure Link is imported
+import { Link } from 'react-router-dom';
 
-// Updated team data with slugs for URL generation
 const teamsData = [
   { name: 'Majors', slug: 'majors' },
   { name: 'Legacy', slug: 'legacy' },
@@ -30,15 +29,16 @@ export default function TeamsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {teamsData.map((team) => (
             <Link
-              key={team.slug} // Use slug for key
-              to={`/teams/${team.slug}`} // Link to the specific team page
+              key={team.slug}
+              to={`/teams/${team.slug}`}
               className="block bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl transform hover:-translate-y-1 group"
             >
-              <div className="w-full h-56 sm:h-64">
+              {/* Container for the image, ensures consistent height and provides background */}
+              <div className="w-full h-56 sm:h-64 bg-gray-100 flex items-center justify-center p-2">
                 <img
                   src={`/images/${team.name.replace(/ /g, '')}.png`}
                   alt={`${team.name} Team Logo`}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ease-in-out"
+                  className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 ease-in-out" // Changed to object-contain
                 />
               </div>
               <div className="p-6 text-center">
