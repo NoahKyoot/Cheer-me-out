@@ -1,10 +1,3 @@
-✅ Here’s the updated HomePage React code with:
-
-✅ All Star Tumbling level buttons (with their original icon toggles)
-✅ Team buttons using images from `/public/images/`
-✅ Clear separation between the tumbling and team sections
-
-```jsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { addDays, format, startOfWeek } from 'date-fns';
