@@ -62,12 +62,10 @@ export default function HomePage() {
   const getDateForDay = (index) => format(addDays(weekStart, index), 'MMM d');
 
   return (
-    <main className="min-h-screen p-6 bg-slate-50"> {/* Updated page background */}
+    <main className="min-h-screen p-6 bg-slate-100"> {/* UPDATED: Page background */}
       <header className="text-center mb-8">
-        {/* Primary Dark Blue for main title */}
-        <h1 className="text-4xl font-bold text-slate-800 mb-2">Cheer Me Out</h1>
-        {/* Neutral text for subtitle */}
-        <p className="text-lg text-slate-600">Weekly Calendar, Events, and Team information.</p>
+        <h1 className="text-4xl font-bold text-blue-900 mb-2">Cheer Me Out</h1> {/* UPDATED: Main title color */}
+        <p className="text-lg text-slate-700">Weekly Calendar, Events, and Team information.</p> {/* UPDATED: Subtitle color */}
       </header>
 
       <div className="max-w-7xl mx-auto space-y-8">
@@ -75,8 +73,8 @@ export default function HomePage() {
         {/* Button Filters Section */}
         <div className="space-y-6">
           <div className="text-center">
-            <h3 className="text-xl font-semibold text-slate-700 mb-3"> {/* Primary Dark Blue variant */}
-              <Link to="/tumbling-levels" className="hover:text-slate-500 hover:underline transition-colors">
+            <h3 className="text-xl font-semibold text-blue-800 mb-3"> {/* UPDATED: Section title color */}
+              <Link to="/tumbling-levels" className="hover:text-blue-600 hover:underline transition-colors">
                 All Star Tumbling
               </Link>
             </h3>
@@ -85,8 +83,12 @@ export default function HomePage() {
                 <button
                   key={lvl}
                   onClick={() => toggleLevel(lvl)}
-                  // Using Accent Coral for selected state
-                  className={`px-4 py-2 rounded text-sm sm:text-base transition-colors ${visibleLevels.has(lvl) ? 'bg-orange-500 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}`}
+                  // UPDATED: Monochromatic blue theme with red accent for selected
+                  className={`px-4 py-2 rounded text-sm sm:text-base transition-colors ${
+                    visibleLevels.has(lvl) 
+                      ? 'bg-blue-700 text-white' // Selected: Darker blue
+                      : 'bg-blue-100 text-blue-700 hover:bg-blue-200' // Default: Lighter blue
+                  }`}
                 >
                   {levelIcons[lvl]} {lvl}
                 </button>
@@ -95,8 +97,8 @@ export default function HomePage() {
           </div>
 
           <div className="text-center">
-            <h3 className="text-xl font-semibold text-slate-700 mb-1"> {/* Primary Dark Blue variant */}
-              <Link to="/teams" className="hover:text-slate-500 hover:underline transition-colors duration-150 ease-in-out">
+            <h3 className="text-xl font-semibold text-blue-800 mb-1"> {/* UPDATED: Section title color */}
+              <Link to="/teams" className="hover:text-blue-600 hover:underline transition-colors duration-150 ease-in-out">
                 Memphis Pride Cheer Teams
               </Link>
             </h3>
@@ -105,9 +107,11 @@ export default function HomePage() {
                 <button
                   key={teamInfo.team}
                   onClick={() => toggleTeam(teamInfo.team)}
-                  // Using Accent Coral for selected state ring/bg
+                  // UPDATED: Blue theme with red accent for selected ring
                   className={`flex-shrink-0 rounded overflow-hidden w-28 h-28 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
-                    visibleTeams.has(teamInfo.team) ? 'ring-4 ring-orange-500 ring-inset bg-orange-50 border-orange-300' : 'bg-white border-slate-300 hover:border-orange-400'
+                    visibleTeams.has(teamInfo.team) 
+                      ? 'ring-4 ring-red-500 ring-inset bg-blue-50 border-red-400' // Selected: Red accent ring
+                      : 'bg-white border-slate-300 hover:border-blue-400' // Default
                   }`}
                   title={teamInfo.team}
                 >
@@ -126,22 +130,20 @@ export default function HomePage() {
         <div className="flex items-center justify-center gap-3 sm:gap-6 mb-4">
           <button
             onClick={() => setWeekOffset(weekOffset - 1)}
-            // Using Primary Dark Blue variant for arrows, subtle hover BG
-            className="p-2 rounded-full hover:bg-slate-200 focus:bg-slate-300 focus:outline-none transition-colors"
+            className="p-2 rounded-full hover:bg-blue-100 focus:bg-blue-200 focus:outline-none transition-colors" // UPDATED: Hover/focus
             aria-label="Previous Week"
           >
-            <svg className="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+            <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg> {/* UPDATED: Arrow color */}
           </button>
 
           <div className="text-center flex-grow md:flex-grow-0">
-            <h4 className="text-lg sm:text-xl font-semibold text-slate-700 whitespace-nowrap">
-              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')}
+            <h4 className="text-lg sm:text-xl font-semibold text-slate-800 whitespace-nowrap"> {/* UPDATED: Date text color */}
+              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d,<y_bin_46>)}
             </h4>
             {weekOffset !== 0 && (
               <button
                 onClick={() => setWeekOffset(0)}
-                // Using Accent Coral for "This Week" link
-                className="text-xs text-orange-600 hover:underline focus:outline-none"
+                className="text-xs text-red-600 hover:underline focus:outline-none" // UPDATED: "This Week" link with red accent
               >
                 (Go to This Week)
               </button>
@@ -150,10 +152,10 @@ export default function HomePage() {
 
           <button
             onClick={() => setWeekOffset(weekOffset + 1)}
-            className="p-2 rounded-full hover:bg-slate-200 focus:bg-slate-300 focus:outline-none transition-colors"
+            className="p-2 rounded-full hover:bg-blue-100 focus:bg-blue-200 focus:outline-none transition-colors" // UPDATED: Hover/focus
             aria-label="Next Week"
           >
-            <svg className="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+            <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg> {/* UPDATED: Arrow color */}
           </button>
         </div>
 
@@ -161,10 +163,9 @@ export default function HomePage() {
         <div className="overflow-x-auto bg-white rounded-lg shadow">
             <table className="min-w-full border-collapse">
               <thead>
-                {/* Primary Dark Blue theme for table header */}
-                <tr className="bg-slate-200">
+                <tr className="bg-blue-700"> {/* UPDATED: Table header with dark blue */}
                   {daysOfWeek.map((day, idx) => (
-                    <th key={day} className="p-3 text-left text-sm font-semibold text-slate-700 border-b border-slate-300">{day}<br /><span className="text-xs text-slate-500 font-normal">{getDateForDay(idx)}</span></th>
+                    <th key={day} className="p-3 text-left text-sm font-semibold text-white border-b border-blue-600">{day}<br /><span className="text-xs text-blue-100 font-normal">{getDateForDay(idx)}</span></th> {/* UPDATED: Text color */}
                   ))}
                 </tr>
               </thead>
@@ -174,9 +175,8 @@ export default function HomePage() {
                     <td key={day} className={`align-top p-2 border border-slate-200 w-1/7 ${dayIndex === 0 ? 'border-l-0' : ''} ${dayIndex === daysOfWeek.length - 1 ? 'border-r-0' : ''}`}>
                       <ul className="space-y-2">
                         {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
-                          // Light tint of Accent Coral for tumbling items
-                          <li className="bg-orange-50 shadow-sm p-2 rounded">
-                            <p className="text-orange-700 font-semibold text-sm mb-1">All Star Tumbling</p>
+                          <li className="bg-blue-50 shadow-sm p-2 rounded"> {/* UPDATED: Lighter blue */}
+                            <p className="text-blue-700 font-semibold text-sm mb-1">All Star Tumbling</p> {/* UPDATED: Mid blue */}
                             {tumblingSchedule.filter((entry) => entry.day === day && visibleLevels.has(entry.level)).map((entry, idx) => (
                               <div key={`tum-${idx}-${day}`} className="text-xs text-slate-700">
                                 {levelIcons[entry.level]} {entry.level}: {entry.time}
@@ -185,9 +185,8 @@ export default function HomePage() {
                           </li>
                         )}
                         {visibleTeams.size > 0 && teamPractice.some((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)) && (
-                          // Light tint of Primary Blue for team practice items
-                          <li className="bg-slate-100 shadow-sm p-2 rounded"> 
-                            <p className="text-slate-700 font-semibold text-sm mb-1">Team Practices</p>
+                          <li className="bg-blue-100 shadow-sm p-2 rounded"> {/* UPDATED: Slightly darker light blue */}
+                            <p className="text-blue-700 font-semibold text-sm mb-1">Team Practices</p> {/* UPDATED: Mid blue */}
                             {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
                               <div key={`team-${idx}-${day}`} className="text-xs text-slate-700">
                                 {teamIcons[entry.team] && <span className="mr-1">{teamIcons[entry.team]}</span>}
@@ -204,12 +203,11 @@ export default function HomePage() {
             </table>
         </div>
         
-        {/* "Upcoming Competitions" Section */}
+        {/* Upcoming Competitions Section */}
         <section>
           <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold text-slate-800 mb-2">Upcoming Competitions</h2>
-            {/* Accent Coral for "View All" link */}
-            <Link to="/competitions" className="text-sm text-orange-600 hover:text-orange-700 hover:underline transition-colors">
+            <h2 className="text-3xl font-bold text-blue-900 mb-2">Upcoming Competitions</h2> {/* UPDATED: Dark blue title */}
+            <Link to="/competitions" className="text-sm text-red-600 hover:text-red-700 hover:underline transition-colors"> {/* UPDATED: Red accent link */}
               (View All Competitions)
             </Link>
           </div>
@@ -231,9 +229,8 @@ export default function HomePage() {
                       />
                     </div>
                   )}
-                  {/* Accent Coral for card title */}
-                  <h3 className="text-xl font-bold text-orange-600 mb-1 line-clamp-2">{comp.eventName}</h3>
-                  {comp.brand && <p className="text-xs text-slate-400 mb-2">{comp.brand}</p>}
+                  <h3 className="text-xl font-bold text-blue-800 mb-1 line-clamp-2">{comp.eventName}</h3> {/* UPDATED: Card title color */}
+                  {comp.brand && <p className="text-xs text-slate-500 mb-2">{comp.brand}</p>}
                   <p className="text-slate-700 text-sm mb-1">
                     📅 <span className="font-medium">{comp.fullDates || comp.dateString}</span>
                   </p>
@@ -247,10 +244,10 @@ export default function HomePage() {
                       {comp.description}
                     </p>
                   )}
-                  {/* Accent Coral for "View Details" button */}
                   <Link
                     to={`/competitions/${comp.id}`}
-                    className="mt-auto inline-block bg-orange-500 text-white px-5 py-2 rounded-md text-sm font-medium hover:bg-orange-600 transition-colors"
+                    // UPDATED: View Details button with red accent
+                    className="mt-auto inline-block bg-red-600 text-white px-5 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition-colors"
                   >
                     View Details
                   </Link>
@@ -260,7 +257,7 @@ export default function HomePage() {
           ) : (
             <div className="text-center text-slate-600 py-8">
               <p className="text-lg mb-2">No upcoming competitions found in our current schedule.</p>
-              <p>Please check back later or <Link to="/competitions" className="text-orange-600 hover:underline">view all competitions</Link>.</p>
+              <p>Please check back later or <Link to="/competitions" className="text-red-600 hover:underline">view all competitions</Link>.</p> {/* UPDATED: Red accent link */}
             </div>
           )}
         </section>
