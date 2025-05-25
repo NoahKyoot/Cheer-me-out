@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { addDays, format, startOfWeek, parse, isFuture, compareAsc } from 'date-fns';
-import { allCompetitions } from './data/competitionsData'; // <-- Import data
+import { allCompetitions } from './data/competitionsData'; // Ensure this path is correct
 
 export default function HomePage() {
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -13,11 +13,11 @@ export default function HomePage() {
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
 
   const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
-  const teamIcons = { /* ... same as before ... */ 
+  const teamIcons = { 
     Majors: '🌟', Legacy: '👑', Blaze: '🔥', Dynasty: '🏰', Reign: '💎',
     Prodigy: '🚀', 'Lady Legends': '🎀', 'Black Smack': '🖤', Inferno: '🔥'
   };
-  const tumblingSchedule = [ /* ... same as before ... */ 
+  const tumblingSchedule = [ 
     { level: 'Level 3', day: 'Mon', time: '5:00 PM – 6:00 PM' }, { level: 'Level 5/6', day: 'Mon', time: '5:00 PM – 6:00 PM' },
     { level: 'Level 4', day: 'Mon', time: '6:00 PM – 7:00 PM' }, { level: 'Level 2', day: 'Mon', time: '7:00 PM – 8:00 PM' },
     { level: 'Level 2', day: 'Tue', time: '5:00 PM – 6:00 PM' }, { level: 'Level 1', day: 'Tue', time: '6:00 PM – 7:00 PM' },
@@ -27,7 +27,7 @@ export default function HomePage() {
     { level: 'Level 5/6', day: 'Thu', time: '5:00 PM – 6:00 PM' }, { level: 'Level 2', day: 'Thu', time: '6:00 PM – 7:00 PM' },
     { level: 'Level 1', day: 'Thu', time: '7:00 PM – 8:00 PM' }
   ];
-  const teamPractice = [ /* ... same as before ... */ 
+  const teamPractice = [ 
     { team: 'Majors', days: ['Tue', 'Thu'] }, { team: 'Legacy', days: ['Mon', 'Wed'] },
     { team: 'Blaze', days: ['Mon', 'Wed'] }, { team: 'Dynasty', days: ['Tue', 'Thu'] },
     { team: 'Reign', days: ['Mon', 'Wed'] }, { team: 'Prodigy', days: ['Tue', 'Thu'] },
@@ -35,16 +35,13 @@ export default function HomePage() {
     { team: 'Inferno', days: ['Mon', 'Wed'] }
   ];
 
-  // For display on homepage, we can take a slice from the imported full list
-  const competitionsForHomepage = allCompetitions.slice(0, 3);
-
+  // Removed unused 'competitionsForHomepage' variable
 
   useEffect(() => {
     const now = new Date();
-    const futureCompetitions = allCompetitions // Use the full imported list
+    const futureCompetitions = allCompetitions
       .map(comp => ({
         ...comp,
-        // Parse the sortableDate (YYYY-MM-DD)
         parsedDate: comp.sortableDate ? parse(comp.sortableDate, 'yyyy-MM-dd', new Date()) : null
       }))
       .filter(comp => comp.parsedDate && isFuture(comp.parsedDate))
@@ -57,12 +54,12 @@ export default function HomePage() {
     }
   }, []); // Runs once on mount
 
-  const toggleLevel = (lvl) => { /* ... same as before ... */ 
+  const toggleLevel = (lvl) => { 
     const updated = new Set(visibleLevels);
     updated.has(lvl) ? updated.delete(lvl) : updated.add(lvl);
     setVisibleLevels(updated);
   };
-  const toggleTeam = (team) => { /* ... same as before ... */ 
+  const toggleTeam = (team) => { 
     const updated = new Set(visibleTeams);
     updated.has(team) ? updated.delete(team) : updated.add(team);
     setVisibleTeams(updated);
@@ -71,7 +68,6 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen p-6 bg-gray-50">
-      {/* ... Header, Week Navigation, Filters ... remain the same */}
       <header className="text-center mb-8">
         <h1 className="text-4xl font-bold text-pink-600 mb-2">Cheer Me Out</h1>
         <p className="text-lg text-gray-700">Weekly Calendar with Image Buttons</p>
@@ -86,7 +82,12 @@ export default function HomePage() {
 
         <div className="space-y-6">
           <div className="text-center">
-            <h3 className="text-xl font-semibold text-pink-600 mb-3">All Star Tumbling</h3>
+            {/* UPDATED: "All Star Tumbling" heading is now a link */}
+            <h3 className="text-xl font-semibold text-pink-600 mb-3">
+              <Link to="/tumbling-levels" className="hover:text-pink-400 hover:underline transition-colors">
+                All Star Tumbling
+              </Link>
+            </h3>
             <div className="flex flex-wrap justify-center gap-2">
               {Object.keys(levelIcons).map((lvl) => (
                 <button
@@ -128,7 +129,6 @@ export default function HomePage() {
         </div>
         
         <div className="overflow-x-auto bg-white rounded-lg shadow">
-            {/* ... Table ... */}
             <table className="min-w-full border-collapse">
               <thead>
                 <tr className="bg-pink-100">
