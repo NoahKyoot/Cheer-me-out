@@ -1,7 +1,9 @@
+// src/HomePage.jsx
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+// MODIFIED: Import useNavigate
+import { Link, useNavigate } from 'react-router-dom'; 
 import { addDays, format, startOfWeek, parse, isFuture, compareAsc } from 'date-fns';
-import { allCompetitions } from './data/competitionsData'; // Ensure this path is correct
+import { allCompetitions } from './data/competitionsData';
 
 export default function HomePage() {
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -10,9 +12,12 @@ export default function HomePage() {
   const [visibleTeams, setVisibleTeams] = useState(new Set());
   const [upcomingCompetitions, setUpcomingCompetitions] = useState([]);
 
+  const navigate = useNavigate(); // MODIFIED: Initialize the navigate function
+
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
   const weekEnd = addDays(weekStart, 6);
 
+  // ... (levelIcons, teamIcons, tumblingSchedule, teamPractice, useEffect, toggleLevel, toggleTeam, getDateForDay remain the same)
   const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
   const teamIcons = { 
     Majors: '🌟', Legacy: '👑', Blaze: '🔥', Dynasty: '🏰', Reign: '💎',
@@ -61,10 +66,11 @@ export default function HomePage() {
   };
   const getDateForDay = (index) => format(addDays(weekStart, index), 'MMM d');
 
+
+  // MODIFIED: handleShowMonth now navigates
   const handleShowMonth = () => {
-    console.log('"View Full Month Calendar" button clicked - implement functionality.');
-    // This function would eventually change the calendar view to a month view
-    // or navigate to a dedicated month calendar page.
+    console.log('"View Full Month Calendar" button clicked - navigating to /month-calendar');
+    navigate('/month-calendar');
   };
 
   return (
@@ -78,7 +84,8 @@ export default function HomePage() {
         
         {/* Button Filters Section */}
         <div className="space-y-6">
-          <div className="text-center">
+            {/* Teams Filters */}
+            <div className="text-center">
             <h3 className="text-xl font-semibold text-blue-400 mb-1">
               <Link to="/teams" className="hover:text-blue-300 hover:underline transition-colors duration-150 ease-in-out">
                 Memphis Pride Cheer Teams
@@ -105,6 +112,7 @@ export default function HomePage() {
               ))}
             </div>
           </div>
+          {/* Tumbling Filters */}
           <div className="text-center">
             <h3 className="text-xl font-semibold text-blue-400 mb-3">
               <Link to="/tumbling-levels" className="hover:text-blue-300 hover:underline transition-colors">
@@ -130,7 +138,7 @@ export default function HomePage() {
         </div>
         
         {/* Calendar Navigation Container */}
-        <div className="space-y-3 text-center"> {/* Groups week nav and month button */}
+        <div className="space-y-3 text-center">
           {/* Week Navigation (Arrows and Date Range) */}
           <div className="flex items-center justify-center gap-3 sm:gap-6">
             <button
@@ -143,7 +151,7 @@ export default function HomePage() {
 
             <div className="text-center flex-grow md:flex-grow-0">
               <h4 className="text-lg sm:text-xl font-semibold text-slate-100 whitespace-nowrap">
-                {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')} {/* Completed date format */}
+                {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')}
               </h4>
               {weekOffset !== 0 && (
                 <button
@@ -164,20 +172,20 @@ export default function HomePage() {
             </button>
           </div>
 
-          {/* New "Show Entire Month" Button */}
-          <div> {/* Centered by parent's text-center */}
+          {/* "Show Entire Month" Button */}
+          <div> 
             <button
-              onClick={handleShowMonth}
+              onClick={handleShowMonth} {/* Uses the updated handler */}
               className="px-4 py-2 text-sm bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
             >
               View Full Month Calendar
             </button>
           </div>
-        </div> {/* End of Calendar Navigation Group */}
-
+        </div>
 
         {/* Calendar Table */}
         <div className="overflow-x-auto bg-slate-800 rounded-lg shadow-md">
+           {/* ... Table ... */}
             <table className="min-w-full border-collapse">
               <thead>
                 <tr className="bg-blue-800">
@@ -222,6 +230,7 @@ export default function HomePage() {
         
         {/* Upcoming Competitions Section */}
         <section>
+           {/* ... Upcoming competitions display ... */}
           <div className="text-center mb-6">
             <h2 className="text-3xl font-bold text-slate-100 mb-2">Upcoming Competitions</h2>
             <Link to="/competitions" className="text-sm text-red-500 hover:text-red-400 hover:underline transition-colors">
