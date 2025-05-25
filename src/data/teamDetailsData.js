@@ -27,7 +27,7 @@ export const allTeamDetails = [
     imageFilename: 'Blaze.png',
     description: 'Blaze brings fiery energy and dynamic routines to every performance!',
     schedule: 'Mondays & Wednesdays, 6:00 PM - 8:00 PM',
-    coach: 'Linda Rodriguez',
+    coach: 'Lisa Pennington',
     achievements: 'Most Innovative Choreography 2024'
   },
   {
