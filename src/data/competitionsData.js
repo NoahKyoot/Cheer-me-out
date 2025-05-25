@@ -5,7 +5,7 @@ export const allCompetitions = [
     id: 'showcase-memphis-2025',
     name: 'Showcase',
     location: 'Memphis, TN',
-    dateString: 'November 8, 2025',
+    dateString: 'November 25, 2025',
     sortableDate: '2025-11-08',
     notes: 'Date is tentative. For Minis, Youth, Juniors, and Seniors.',
     description: 'Join us for our annual team showcase!'
