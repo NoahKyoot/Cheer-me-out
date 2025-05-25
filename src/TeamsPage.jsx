@@ -1,19 +1,7 @@
+// src/TeamsPage.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-
-// Ensure this data is consistent with your actual team names and desired slugs.
-// Image names should also match files in public/images/ (e.g., LadyLegends.png)
-const teamsData = [
-  { name: 'Majors', slug: 'majors' },
-  { name: 'Legacy', slug: 'legacy' },
-  { name: 'Blaze', slug: 'blaze' },
-  { name: 'Dynasty', slug: 'dynasty' },
-  { name: 'Reign', slug: 'reign' },
-  { name: 'Prodigy', slug: 'prodigy' },
-  { name: 'Lady Legends', slug: 'lady-legends' },
-  { name: 'Black Smack', slug: 'black-smack' },
-  { name: 'Inferno', slug: 'inferno' }
-];
+import { allTeamDetails } from './data/teamDetailsData'; // <-- Import the detailed data
 
 export default function TeamsPage() {
   return (
@@ -37,15 +25,15 @@ export default function TeamsPage() {
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-          {teamsData.map((team) => (
+          {allTeamDetails.map((team) => ( // Use allTeamDetails
             <Link
               key={team.slug}
               to={`/teams/${team.slug}`}
               className="block bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl transform hover:-translate-y-1 group"
             >
-              <div className="w-full aspect-square bg-gray-100 flex items-center justify-center p-2"> {/* aspect-square for tile look */}
+              <div className="w-full aspect-square bg-gray-100 flex items-center justify-center p-2">
                 <img
-                  src={`/images/${team.name.replace(/ /g, '')}.png`}
+                  src={`/images/${team.imageFilename}`} // Use imageFilename from the data
                   alt={`${team.name} Team Logo`}
                   className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 ease-in-out"
                 />
