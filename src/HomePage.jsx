@@ -62,18 +62,17 @@ export default function HomePage() {
   const getDateForDay = (index) => format(addDays(weekStart, index), 'MMM d');
 
   return (
-    <main className="min-h-screen p-6 bg-slate-100"> {/* UPDATED: Page background */}
+    <main className="min-h-screen p-6 bg-slate-100">
       <header className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-blue-900 mb-2">Cheer Me Out</h1> {/* UPDATED: Main title color */}
-        <p className="text-lg text-slate-700">Weekly Calendar, Events, and Team information.</p> {/* UPDATED: Subtitle color */}
+        <h1 className="text-4xl font-bold text-blue-900 mb-2">Cheer Me Out</h1>
+        <p className="text-lg text-slate-700">Weekly Calendar, Events, and Team information.</p>
       </header>
 
       <div className="max-w-7xl mx-auto space-y-8">
         
-        {/* Button Filters Section */}
         <div className="space-y-6">
           <div className="text-center">
-            <h3 className="text-xl font-semibold text-blue-800 mb-3"> {/* UPDATED: Section title color */}
+            <h3 className="text-xl font-semibold text-blue-800 mb-3">
               <Link to="/tumbling-levels" className="hover:text-blue-600 hover:underline transition-colors">
                 All Star Tumbling
               </Link>
@@ -83,11 +82,10 @@ export default function HomePage() {
                 <button
                   key={lvl}
                   onClick={() => toggleLevel(lvl)}
-                  // UPDATED: Monochromatic blue theme with red accent for selected
                   className={`px-4 py-2 rounded text-sm sm:text-base transition-colors ${
                     visibleLevels.has(lvl) 
-                      ? 'bg-blue-700 text-white' // Selected: Darker blue
-                      : 'bg-blue-100 text-blue-700 hover:bg-blue-200' // Default: Lighter blue
+                      ? 'bg-blue-700 text-white' 
+                      : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
                   }`}
                 >
                   {levelIcons[lvl]} {lvl}
@@ -97,7 +95,7 @@ export default function HomePage() {
           </div>
 
           <div className="text-center">
-            <h3 className="text-xl font-semibold text-blue-800 mb-1"> {/* UPDATED: Section title color */}
+            <h3 className="text-xl font-semibold text-blue-800 mb-1">
               <Link to="/teams" className="hover:text-blue-600 hover:underline transition-colors duration-150 ease-in-out">
                 Memphis Pride Cheer Teams
               </Link>
@@ -107,11 +105,10 @@ export default function HomePage() {
                 <button
                   key={teamInfo.team}
                   onClick={() => toggleTeam(teamInfo.team)}
-                  // UPDATED: Blue theme with red accent for selected ring
                   className={`flex-shrink-0 rounded overflow-hidden w-28 h-28 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
                     visibleTeams.has(teamInfo.team) 
-                      ? 'ring-4 ring-red-500 ring-inset bg-blue-50 border-red-400' // Selected: Red accent ring
-                      : 'bg-white border-slate-300 hover:border-blue-400' // Default
+                      ? 'ring-4 ring-red-500 ring-inset bg-blue-50 border-red-400' 
+                      : 'bg-white border-slate-300 hover:border-blue-400'
                   }`}
                   title={teamInfo.team}
                 >
@@ -126,24 +123,24 @@ export default function HomePage() {
           </div>
         </div>
         
-        {/* Week Navigation */}
         <div className="flex items-center justify-center gap-3 sm:gap-6 mb-4">
           <button
             onClick={() => setWeekOffset(weekOffset - 1)}
-            className="p-2 rounded-full hover:bg-blue-100 focus:bg-blue-200 focus:outline-none transition-colors" // UPDATED: Hover/focus
+            className="p-2 rounded-full hover:bg-blue-100 focus:bg-blue-200 focus:outline-none transition-colors"
             aria-label="Previous Week"
           >
-            <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg> {/* UPDATED: Arrow color */}
+            <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
           </button>
 
           <div className="text-center flex-grow md:flex-grow-0">
-            <h4 className="text-lg sm:text-xl font-semibold text-slate-800 whitespace-nowrap"> {/* UPDATED: Date text color */}
-              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d,<y_bin_46>)}
+            <h4 className="text-lg sm:text-xl font-semibold text-slate-800 whitespace-nowrap">
+              {/* CORRECTED THE FORMAT STRING FOR weekEnd */}
+              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')}
             </h4>
             {weekOffset !== 0 && (
               <button
                 onClick={() => setWeekOffset(0)}
-                className="text-xs text-red-600 hover:underline focus:outline-none" // UPDATED: "This Week" link with red accent
+                className="text-xs text-red-600 hover:underline focus:outline-none"
               >
                 (Go to This Week)
               </button>
@@ -152,20 +149,19 @@ export default function HomePage() {
 
           <button
             onClick={() => setWeekOffset(weekOffset + 1)}
-            className="p-2 rounded-full hover:bg-blue-100 focus:bg-blue-200 focus:outline-none transition-colors" // UPDATED: Hover/focus
+            className="p-2 rounded-full hover:bg-blue-100 focus:bg-blue-200 focus:outline-none transition-colors"
             aria-label="Next Week"
           >
-            <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg> {/* UPDATED: Arrow color */}
+            <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
           </button>
         </div>
 
-        {/* Calendar Table */}
         <div className="overflow-x-auto bg-white rounded-lg shadow">
             <table className="min-w-full border-collapse">
               <thead>
-                <tr className="bg-blue-700"> {/* UPDATED: Table header with dark blue */}
+                <tr className="bg-blue-700">
                   {daysOfWeek.map((day, idx) => (
-                    <th key={day} className="p-3 text-left text-sm font-semibold text-white border-b border-blue-600">{day}<br /><span className="text-xs text-blue-100 font-normal">{getDateForDay(idx)}</span></th> {/* UPDATED: Text color */}
+                    <th key={day} className="p-3 text-left text-sm font-semibold text-white border-b border-blue-600">{day}<br /><span className="text-xs text-blue-100 font-normal">{getDateForDay(idx)}</span></th>
                   ))}
                 </tr>
               </thead>
@@ -175,8 +171,8 @@ export default function HomePage() {
                     <td key={day} className={`align-top p-2 border border-slate-200 w-1/7 ${dayIndex === 0 ? 'border-l-0' : ''} ${dayIndex === daysOfWeek.length - 1 ? 'border-r-0' : ''}`}>
                       <ul className="space-y-2">
                         {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
-                          <li className="bg-blue-50 shadow-sm p-2 rounded"> {/* UPDATED: Lighter blue */}
-                            <p className="text-blue-700 font-semibold text-sm mb-1">All Star Tumbling</p> {/* UPDATED: Mid blue */}
+                          <li className="bg-blue-50 shadow-sm p-2 rounded">
+                            <p className="text-blue-700 font-semibold text-sm mb-1">All Star Tumbling</p>
                             {tumblingSchedule.filter((entry) => entry.day === day && visibleLevels.has(entry.level)).map((entry, idx) => (
                               <div key={`tum-${idx}-${day}`} className="text-xs text-slate-700">
                                 {levelIcons[entry.level]} {entry.level}: {entry.time}
@@ -185,8 +181,8 @@ export default function HomePage() {
                           </li>
                         )}
                         {visibleTeams.size > 0 && teamPractice.some((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)) && (
-                          <li className="bg-blue-100 shadow-sm p-2 rounded"> {/* UPDATED: Slightly darker light blue */}
-                            <p className="text-blue-700 font-semibold text-sm mb-1">Team Practices</p> {/* UPDATED: Mid blue */}
+                          <li className="bg-blue-100 shadow-sm p-2 rounded"> 
+                            <p className="text-blue-700 font-semibold text-sm mb-1">Team Practices</p>
                             {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
                               <div key={`team-${idx}-${day}`} className="text-xs text-slate-700">
                                 {teamIcons[entry.team] && <span className="mr-1">{teamIcons[entry.team]}</span>}
@@ -203,11 +199,10 @@ export default function HomePage() {
             </table>
         </div>
         
-        {/* Upcoming Competitions Section */}
         <section>
           <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold text-blue-900 mb-2">Upcoming Competitions</h2> {/* UPDATED: Dark blue title */}
-            <Link to="/competitions" className="text-sm text-red-600 hover:text-red-700 hover:underline transition-colors"> {/* UPDATED: Red accent link */}
+            <h2 className="text-3xl font-bold text-blue-900 mb-2">Upcoming Competitions</h2>
+            <Link to="/competitions" className="text-sm text-red-600 hover:text-red-700 hover:underline transition-colors">
               (View All Competitions)
             </Link>
           </div>
@@ -229,7 +224,7 @@ export default function HomePage() {
                       />
                     </div>
                   )}
-                  <h3 className="text-xl font-bold text-blue-800 mb-1 line-clamp-2">{comp.eventName}</h3> {/* UPDATED: Card title color */}
+                  <h3 className="text-xl font-bold text-blue-800 mb-1 line-clamp-2">{comp.eventName}</h3>
                   {comp.brand && <p className="text-xs text-slate-500 mb-2">{comp.brand}</p>}
                   <p className="text-slate-700 text-sm mb-1">
                     📅 <span className="font-medium">{comp.fullDates || comp.dateString}</span>
@@ -246,7 +241,6 @@ export default function HomePage() {
                   )}
                   <Link
                     to={`/competitions/${comp.id}`}
-                    // UPDATED: View Details button with red accent
                     className="mt-auto inline-block bg-red-600 text-white px-5 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition-colors"
                   >
                     View Details
@@ -257,7 +251,7 @@ export default function HomePage() {
           ) : (
             <div className="text-center text-slate-600 py-8">
               <p className="text-lg mb-2">No upcoming competitions found in our current schedule.</p>
-              <p>Please check back later or <Link to="/competitions" className="text-red-600 hover:underline">view all competitions</Link>.</p> {/* UPDATED: Red accent link */}
+              <p>Please check back later or <Link to="/competitions" className="text-red-600 hover:underline">view all competitions</Link>.</p>
             </div>
           )}
         </section>
