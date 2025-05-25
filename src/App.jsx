@@ -1,13 +1,14 @@
+// src/App.jsx
 import React from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import HomePage from './HomePage';
 import TeamsPage from './TeamsPage';
 import TeamDetailPage from './TeamDetailPage';
 import CompetitionsPage from './CompetitionsPage';
-import CompetitionDetail from './CompetitionDetail'; // Assuming CompetitionDetail is in its own file now
+import CompetitionDetail from './CompetitionDetail'; // <-- This will now import from src/CompetitionDetail.jsx
 import TumblingLevelsPage from './TumblingLevelsPage';
 
-// Your existing NotFound component (or you might move it to its own file too)
+// NotFound component can stay here or move to its own file
 function NotFound() {
   return (
     <div className="min-h-screen bg-white p-10 text-center">
@@ -26,7 +27,6 @@ export default function App() {
         <Route path="/teams" element={<TeamsPage />} />
         <Route path="/teams/:teamSlug" element={<TeamDetailPage />} />
         <Route path="/competitions" element={<CompetitionsPage />} />
-        {/* UPDATED ROUTE for specific competition detail */}
         <Route path="/competitions/:competitionSlug" element={<CompetitionDetail />} />
         <Route path="/tumbling-levels" element={<TumblingLevelsPage />} />
         <Route path="*" element={<NotFound />} />
