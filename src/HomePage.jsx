@@ -1,8 +1,13 @@
+// HomePage.jsx
+// ... (other imports and code remain the same) ...
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { addDays, format, startOfWeek } from 'date-fns';
 
 export default function HomePage() {
+  // ... (all your existing state, data, and functions remain the same) ...
+  // The 'competitions' array here can be just a slice or the first few items
+  // if the full list is managed elsewhere or in CompetitionsPage.jsx
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const [weekOffset, setWeekOffset] = useState(0);
   const [visibleLevels, setVisibleLevels] = useState(new Set());
@@ -11,26 +16,19 @@ export default function HomePage() {
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
 
   const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
-  const teamIcons = {
+  const teamIcons = { 
     Majors: '🌟', Legacy: '👑', Blaze: '🔥', Dynasty: '🏰', Reign: '💎',
     Prodigy: '🚀', 'Lady Legends': '🎀', 'Black Smack': '🖤', Inferno: '🔥'
   };
 
   const tumblingSchedule = [
-    { level: 'Level 3', day: 'Mon', time: '5:00 PM – 6:00 PM' },
-    { level: 'Level 5/6', day: 'Mon', time: '5:00 PM – 6:00 PM' },
-    { level: 'Level 4', day: 'Mon', time: '6:00 PM – 7:00 PM' },
-    { level: 'Level 2', day: 'Mon', time: '7:00 PM – 8:00 PM' },
-    { level: 'Level 2', day: 'Tue', time: '5:00 PM – 6:00 PM' },
-    { level: 'Level 1', day: 'Tue', time: '6:00 PM – 7:00 PM' },
-    { level: 'Level 3', day: 'Tue', time: '7:00 PM – 8:00 PM' },
-    { level: 'Level 1', day: 'Wed', time: '5:00 PM – 6:00 PM' },
-    { level: 'Level 3', day: 'Wed', time: '6:00 PM – 7:00 PM' },
-    { level: 'Level 4', day: 'Wed', time: '7:00 PM – 8:00 PM' },
-    { level: 'Level 5/6', day: 'Wed', time: '7:00 PM – 8:00 PM' },
-    { level: 'Level 4', day: 'Thu', time: '5:00 PM – 6:00 PM' },
-    { level: 'Level 5/6', day: 'Thu', time: '5:00 PM – 6:00 PM' },
-    { level: 'Level 2', day: 'Thu', time: '6:00 PM – 7:00 PM' },
+    { level: 'Level 3', day: 'Mon', time: '5:00 PM – 6:00 PM' }, { level: 'Level 5/6', day: 'Mon', time: '5:00 PM – 6:00 PM' },
+    { level: 'Level 4', day: 'Mon', time: '6:00 PM – 7:00 PM' }, { level: 'Level 2', day: 'Mon', time: '7:00 PM – 8:00 PM' },
+    { level: 'Level 2', day: 'Tue', time: '5:00 PM – 6:00 PM' }, { level: 'Level 1', day: 'Tue', time: '6:00 PM – 7:00 PM' },
+    { level: 'Level 3', day: 'Tue', time: '7:00 PM – 8:00 PM' }, { level: 'Level 1', day: 'Wed', time: '5:00 PM – 6:00 PM' },
+    { level: 'Level 3', day: 'Wed', time: '6:00 PM – 7:00 PM' }, { level: 'Level 4', day: 'Wed', time: '7:00 PM – 8:00 PM' },
+    { level: 'Level 5/6', day: 'Wed', time: '7:00 PM – 8:00 PM' }, { level: 'Level 4', day: 'Thu', time: '5:00 PM – 6:00 PM' },
+    { level: 'Level 5/6', day: 'Thu', time: '5:00 PM – 6:00 PM' }, { level: 'Level 2', day: 'Thu', time: '6:00 PM – 7:00 PM' },
     { level: 'Level 1', day: 'Thu', time: '7:00 PM – 8:00 PM' }
   ];
 
@@ -42,10 +40,13 @@ export default function HomePage() {
     { team: 'Inferno', days: ['Mon', 'Wed'] }
   ];
 
+  // This 'competitions' array on HomePage could be a subset of all competitions
   const competitions = [
-    { id: 'showcase-memphis-2025', name: 'Showcase – Memphis, TN', date: 'November 8, 2025' },
-    { id: 'cheersport-memphis-2025', name: 'Cheersport – Memphis, TN', date: 'November 9, 2025' }
+    { id: 'showcase-memphis-2025', name: 'Showcase – Memphis, TN', date: 'November 8, 2025', description: 'Join us for our annual team showcase!' },
+    { id: 'cheersport-memphis-2025', name: 'Cheersport – Memphis, TN', date: 'November 9, 2025', description: 'A major regional competition.' },
+    { id: 'winter-classic-nashville-2026', name: 'Winter Classic – Nashville, TN', date: 'January 25-26, 2026', description: 'Kick off the new year with fierce competition.' } // Showing 3 here
   ];
+
 
   const toggleLevel = (lvl) => {
     const updated = new Set(visibleLevels);
@@ -69,10 +70,11 @@ export default function HomePage() {
       </header>
 
       <div className="max-w-7xl mx-auto space-y-8">
+        {/* ... Week Navigation and Filter Buttons ... */}
         <div className="flex justify-center gap-4">
-          <button onClick={() => setWeekOffset(weekOffset - 1)} className="px-4 py-2 bg-pink-100 rounded">← Previous Week</button>
-          <button onClick={() => setWeekOffset(0)} className="px-4 py-2 bg-pink-100 rounded">This Week</button>
-          <button onClick={() => setWeekOffset(weekOffset + 1)} className="px-4 py-2 bg-pink-100 rounded">Next Week →</button>
+          <button onClick={() => setWeekOffset(weekOffset - 1)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">← Previous Week</button>
+          <button onClick={() => setWeekOffset(0)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">This Week</button>
+          <button onClick={() => setWeekOffset(weekOffset + 1)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">Next Week →</button>
         </div>
 
         <div className="space-y-6">
@@ -83,7 +85,7 @@ export default function HomePage() {
                 <button
                   key={lvl}
                   onClick={() => toggleLevel(lvl)}
-                  className={`px-4 py-2 rounded text-sm sm:text-base ${visibleLevels.has(lvl) ? 'bg-pink-600 text-white' : 'bg-pink-100 text-pink-800'}`}
+                  className={`px-4 py-2 rounded text-sm sm:text-base transition-colors ${visibleLevels.has(lvl) ? 'bg-pink-600 text-white' : 'bg-pink-100 text-pink-800 hover:bg-pink-200'}`}
                 >
                   {levelIcons[lvl]} {lvl}
                 </button>
@@ -102,51 +104,53 @@ export default function HomePage() {
                 <button
                   key={teamInfo.team}
                   onClick={() => toggleTeam(teamInfo.team)}
-                  className={`rounded overflow-hidden w-20 h-20 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 ${
-                    visibleTeams.has(teamInfo.team) ? 'ring-4 ring-yellow-500 ring-inset bg-yellow-50 border-yellow-300' : 'bg-white border-gray-300'
+                  className={`rounded overflow-hidden w-20 h-20 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
+                    visibleTeams.has(teamInfo.team) ? 'ring-4 ring-yellow-500 ring-inset bg-yellow-50 border-yellow-300' : 'bg-white border-gray-300 hover:border-yellow-400'
                   }`}
                   title={teamInfo.team}
                 >
                   <img
                     src={`/images/${teamInfo.team.replace(/ /g, '')}.png`}
                     alt={teamInfo.team}
-                    className="max-w-full max-h-full object-contain" // Changed to object-contain
+                    className="max-w-full max-h-full object-contain"
                   />
                 </button>
               ))}
             </div>
           </div>
         </div>
-
-        <div className="overflow-x-auto">
-            <table className="min-w-full border border-gray-300">
+        
+        <div className="overflow-x-auto bg-white rounded-lg shadow">
+            {/* ... Table ... */}
+            <table className="min-w-full border-collapse">
               <thead>
                 <tr className="bg-pink-100">
                   {daysOfWeek.map((day, idx) => (
-                    <th key={day} className="p-2 text-pink-800 border border-gray-300">{day}<br /><span className="text-sm text-gray-500">{getDateForDay(idx)}</span></th>
+                    <th key={day} className="p-3 text-left text-sm font-semibold text-pink-800 border-b border-pink-200">{day}<br /><span className="text-xs text-gray-500 font-normal">{getDateForDay(idx)}</span></th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  {daysOfWeek.map((day) => (
-                    <td key={day} className="align-top p-2 border border-gray-300 w-1/7">
+                  {daysOfWeek.map((day, dayIndex) => (
+                    <td key={day} className={`align-top p-2 border border-gray-200 w-1/7 ${dayIndex === 0 ? 'border-l-0' : ''} ${dayIndex === daysOfWeek.length - 1 ? 'border-r-0' : ''}`}>
                       <ul className="space-y-2">
                         {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
-                          <li className="bg-white shadow p-2 rounded">
-                            <p className="text-pink-600 font-semibold mb-1">All Star Tumbling</p>
+                          <li className="bg-pink-50 shadow-sm p-2 rounded">
+                            <p className="text-pink-700 font-semibold text-sm mb-1">All Star Tumbling</p>
                             {tumblingSchedule.filter((entry) => entry.day === day && visibleLevels.has(entry.level)).map((entry, idx) => (
-                              <div key={`tum-${idx}-${day}`} className="text-sm text-gray-700">
+                              <div key={`tum-${idx}-${day}`} className="text-xs text-gray-700">
                                 {levelIcons[entry.level]} {entry.level}: {entry.time}
                               </div>
                             ))}
                           </li>
                         )}
                         {visibleTeams.size > 0 && teamPractice.some((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)) && (
-                          <li className="bg-yellow-50 shadow p-2 rounded">
-                            <p className="text-yellow-700 font-semibold mb-1">Team Practices</p>
+                          <li className="bg-yellow-50 shadow-sm p-2 rounded">
+                            <p className="text-yellow-700 font-semibold text-sm mb-1">Team Practices</p>
                             {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
-                              <div key={`team-${idx}-${day}`} className="text-sm text-gray-700">
+                              <div key={`team-${idx}-${day}`} className="text-xs text-gray-700">
+                                {teamIcons[entry.team] && <span className="mr-1">{teamIcons[entry.team]}</span>}
                                 {entry.team}: 6:00 PM – 8:00 PM
                               </div>
                             ))}
@@ -160,14 +164,27 @@ export default function HomePage() {
             </table>
         </div>
 
+        {/* MODIFIED UPCOMING COMPETITIONS SECTION */}
         <section>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Upcoming Competitions</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {competitions.slice(0, 2).map((comp) => (
-              <div key={comp.id} className="bg-white shadow rounded p-4">
-                <h3 className="text-pink-600 font-bold text-lg mb-1">{comp.name}</h3>
-                <p className="text-gray-700 mb-2">📅 {comp.date}</p>
-                <Link to={`/competitions/${comp.id}`} className="inline-block bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600">View Details</Link>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
+            <Link to="/competitions" className="hover:text-pink-600 hover:underline transition-colors">
+              Upcoming Competitions
+            </Link>
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* The homepage shows a slice of competitions (e.g., first 3) */}
+            {competitions.slice(0, 3).map((comp) => (
+              <div key={comp.id} className="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow flex flex-col justify-between">
+                <div>
+                  <h3 className="text-pink-600 font-bold text-xl mb-2">{comp.name}</h3>
+                  <p className="text-gray-600 text-sm mb-3">📅 {comp.date}</p>
+                </div>
+                <Link 
+                  to={`/competitions/${comp.id}`} 
+                  className="mt-4 inline-block bg-pink-500 text-white px-5 py-2 rounded-md text-sm font-medium hover:bg-pink-600 transition-colors self-start"
+                >
+                  View Details
+                </Link>
               </div>
             ))}
           </div>
