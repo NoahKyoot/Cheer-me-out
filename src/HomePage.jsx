@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { addDays, format, startOfWeek } from 'date-fns';
 
-// No need to import BlazeLogo or MajorsLogo if they are in the public folder
-
 export default function HomePage() {
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const [weekOffset, setWeekOffset] = useState(0);
@@ -14,11 +12,10 @@ export default function HomePage() {
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
 
   const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
-  // For Blaze and Majors, we will use images, so their icons here might be placeholders or not used for them.
   const teamIcons = {
-    Majors: '🌟', // Placeholder, will be replaced by image
+    Majors: '🌟',
     Legacy: '👑',
-    Blaze: '🔥', // Placeholder, will be replaced by image
+    Blaze: '🔥',
     Dynasty: '🏰',
     Reign: '💎',
     Prodigy: '🚀',
@@ -107,22 +104,22 @@ export default function HomePage() {
 
         <div className="text-center">
           <h3 className="text-xl font-semibold text-yellow-700 mb-3">Memphis Pride Cheer</h3>
-          <div className="flex flex-wrap justify-center items-center gap-2"> {/* Added items-center for vertical alignment if heights differ */}
+          <div className="flex flex-wrap justify-center items-center gap-3"> {/* Increased gap slightly for larger tiles */}
             {Object.keys(teamIcons).map((team) => {
               if (team === 'Blaze') {
                 return (
                   <button
                     key={team}
-                    title="Blaze" // Tooltip for accessibility
+                    title="Blaze"
                     onClick={() => toggleTeam(team)}
-                    className={`p-0.5 rounded focus:outline-none 
-                                ${visibleTeams.has(team) ? 'ring-2 ring-yellow-500 bg-yellow-100' : 'ring-1 ring-gray-300 hover:ring-yellow-400'}`}
-                    style={{ width: '60px', height: '40px' }} // Adjust size as needed
+                    // Increased size to w-24 h-24 (96px), adjusted padding and styling
+                    className={`w-24 h-24 p-1 rounded focus:outline-none flex items-center justify-center
+                                ${visibleTeams.has(team) ? 'ring-2 ring-offset-2 ring-yellow-500 bg-yellow-50 shadow-md' : 'bg-white ring-1 ring-gray-300 hover:ring-yellow-400 shadow hover:shadow-lg'}`}
                   >
                     <img
-                      src="/images/Blaze.png" // Directly use public path
+                      src="/images/Blaze.png"
                       alt="Blaze Team Logo"
-                      className="object-contain h-full w-full"
+                      className="object-contain max-h-full max-w-full" // Image will be contained within the button's padding
                     />
                   </button>
                 );
@@ -130,16 +127,16 @@ export default function HomePage() {
                 return (
                   <button
                     key={team}
-                    title="Majors" // Tooltip for accessibility
+                    title="Majors"
                     onClick={() => toggleTeam(team)}
-                    className={`p-0.5 rounded focus:outline-none 
-                                ${visibleTeams.has(team) ? 'ring-2 ring-yellow-500 bg-yellow-100' : 'ring-1 ring-gray-300 hover:ring-yellow-400'}`}
-                    style={{ width: '60px', height: '40px' }} // Adjust size as needed
+                    // Increased size to w-24 h-24 (96px), adjusted padding and styling
+                    className={`w-24 h-24 p-1 rounded focus:outline-none flex items-center justify-center
+                                ${visibleTeams.has(team) ? 'ring-2 ring-offset-2 ring-yellow-500 bg-yellow-50 shadow-md' : 'bg-white ring-1 ring-gray-300 hover:ring-yellow-400 shadow hover:shadow-lg'}`}
                   >
                     <img
-                      src="/images/Majors.png" // Directly use public path
+                      src="/images/Majors.png"
                       alt="Majors Team Logo"
-                      className="object-contain h-full w-full"
+                      className="object-contain max-h-full max-w-full" // Image will be contained within the button's padding
                     />
                   </button>
                 );
@@ -167,6 +164,7 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* ... rest of your table and competitions section ... */}
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-300">
           <thead>
