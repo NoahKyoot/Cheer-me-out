@@ -8,9 +8,10 @@ export default function HomePage() {
   const [weekOffset, setWeekOffset] = useState(0);
   const [visibleLevels, setVisibleLevels] = useState(new Set());
   const [visibleTeams, setVisibleTeams] = useState(new Set());
-  const [upcomingCompetitions, setUpcomingCompetitions] = useState([]);
+  const [upcomingCompetitions, setUpcomingCompetitions] = useState([]); // Changed from nextCompetition
 
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
+  const weekEnd = addDays(weekStart, 6);
 
   const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
   const teamIcons = { 
@@ -64,18 +65,13 @@ export default function HomePage() {
     <main className="min-h-screen p-6 bg-gray-50">
       <header className="text-center mb-8">
         <h1 className="text-4xl font-bold text-pink-600 mb-2">Cheer Me Out</h1>
-        <p className="text-lg text-gray-700">Weekly Calendar with Image Buttons</p>
+        {/* UPDATED Subtitle Text */}
+        <p className="text-lg text-gray-700">Weekly Calendar, Events, and Team information.</p>
       </header>
 
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Week Navigation */}
-        <div className="flex justify-center gap-4">
-          <button onClick={() => setWeekOffset(weekOffset - 1)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">← Previous Week</button>
-          <button onClick={() => setWeekOffset(0)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">This Week</button>
-          <button onClick={() => setWeekOffset(weekOffset + 1)} className="px-4 py-2 bg-pink-100 rounded hover:bg-pink-200 transition-colors">Next Week →</button>
-        </div>
-
-        {/* Button Filters Section */}
+        
+        {/* Button Filters Section - Appears before week navigation and calendar */}
         <div className="space-y-6">
           <div className="text-center">
             <h3 className="text-xl font-semibold text-pink-600 mb-3">
@@ -123,10 +119,43 @@ export default function HomePage() {
           </div>
         </div>
         
+        {/* UPDATED Week Navigation - Above calendar, styled with arrows and central date display */}
+        <div className="flex items-center justify-center gap-3 sm:gap-6 mb-4">
+          <button
+            onClick={() => setWeekOffset(weekOffset - 1)}
+            className="p-2 rounded-full hover:bg-pink-100 focus:bg-pink-200 focus:outline-none transition-colors"
+            aria-label="Previous Week"
+          >
+            <svg className="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+          </button>
+
+          <div className="text-center flex-grow md:flex-grow-0"> {/* Allow text to take space but not push arrows too far on md+ */}
+            <h4 className="text-lg sm:text-xl font-semibold text-gray-700 whitespace-nowrap">
+              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')}
+            </h4>
+            {weekOffset !== 0 && (
+              <button
+                onClick={() => setWeekOffset(0)}
+                className="text-xs text-pink-600 hover:underline focus:outline-none"
+              >
+                (Go to This Week)
+              </button>
+            )}
+          </div>
+
+          <button
+            onClick={() => setWeekOffset(weekOffset + 1)}
+            className="p-2 rounded-full hover:bg-pink-100 focus:bg-pink-200 focus:outline-none transition-colors"
+            aria-label="Next Week"
+          >
+            <svg className="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+        </div>
+
         {/* Calendar Table */}
         <div className="overflow-x-auto bg-white rounded-lg shadow">
-            {/* ... Table ... */}
             <table className="min-w-full border-collapse">
+              {/* ... Table Head and Body ... */}
               <thead>
                 <tr className="bg-pink-100">
                   {daysOfWeek.map((day, idx) => (
@@ -139,8 +168,7 @@ export default function HomePage() {
                   {daysOfWeek.map((day, dayIndex) => (
                     <td key={day} className={`align-top p-2 border border-gray-200 w-1/7 ${dayIndex === 0 ? 'border-l-0' : ''} ${dayIndex === daysOfWeek.length - 1 ? 'border-r-0' : ''}`}>
                       <ul className="space-y-2">
-                        {/* ... Tumbling and Team Practice list items ... */}
-                         {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
+                        {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
                           <li className="bg-pink-50 shadow-sm p-2 rounded">
                             <p className="text-pink-700 font-semibold text-sm mb-1">All Star Tumbling</p>
                             {tumblingSchedule.filter((entry) => entry.day === day && visibleLevels.has(entry.level)).map((entry, idx) => (
@@ -169,7 +197,7 @@ export default function HomePage() {
             </table>
         </div>
         
-        {/* Upcoming Competitions Section */}
+        {/* "Upcoming Competitions" Section */}
         <section>
           <div className="text-center mb-6">
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Upcoming Competitions</h2>
@@ -177,18 +205,13 @@ export default function HomePage() {
               (View All Competitions)
             </Link>
           </div>
-
           {upcomingCompetitions.length > 0 ? (
-            // UPDATED: Horizontally scrollable container
-            // Added px-4 (or px-6, px-8) for padding on the sides of the scrollable area
-            // Conditionally add 'justify-center' if only one competition card to display
             <div className={`flex overflow-x-auto pb-4 pt-2 px-4 sm:px-6 gap-6 snap-x snap-mandatory ${
                 upcomingCompetitions.length === 1 ? 'justify-center' : ''
             }`}>
               {upcomingCompetitions.map((comp) => (
                 <div
                   key={comp.id}
-                  // Each card: flex-shrink-0 is important. w-80 or w-72 is a good start.
                   className="flex-shrink-0 w-72 md:w-80 snap-center bg-white shadow-xl rounded-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl flex flex-col items-center text-center"
                 >
                   {comp.logo && (
