@@ -11,13 +11,9 @@ export default function HomePage() {
 
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
 
-  const levelIcons = {
-    'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥'
-  };
+  const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
 
-  const teamIcons = {
-    Majors: '🌟', Legacy: '👑', Blaze: '🔥', Dynasty: '🏰', Reign: '💎', Prodigy: '🚀', 'Lady Legends': '🎀', 'Black Smack': '🖤', Inferno: '🔥'
-  };
+  const teamIcons = { Majors: '🌟', Legacy: '👑', Blaze: '🔥', Dynasty: '🏰', Reign: '💎', Prodigy: '🚀', 'Lady Legends': '🎀', 'Black Smack': '🖤', Inferno: '🔥' };
 
   const tumblingSchedule = [
     { level: 'Level 3', day: 'Mon', time: '5:00 PM – 6:00 PM' },
@@ -56,15 +52,7 @@ export default function HomePage() {
 
   const competitions = [
     { id: 'showcase-memphis-2025', name: 'Showcase – Memphis, TN', date: 'November 8, 2025' },
-    { id: 'cheersport-memphis-2025', name: 'Cheersport – Memphis, TN', date: 'November 9, 2025' },
-    { id: 'deep-south-pigeon-forge-2025', name: 'Deep South – Pigeon Forge, TN', date: 'December 13-14, 2025' },
-    { id: 'battle-big-top-2025', name: 'Battle Under the Big Top – Atlanta, GA', date: 'December 13-14, 2025' },
-    { id: 'athletic-championships-2026', name: 'Athletic Championships – Chattanooga, TN', date: 'January 24-25, 2026' },
-    { id: 'cheer-expo-2026', name: 'Cheer Expo – Pigeon Forge, TN', date: 'January 31 - February 1, 2026' },
-    { id: 'nca-classic-2026', name: 'NCA Classic – Memphis, TN', date: 'February 7, 2026' },
-    { id: 'deep-south-biloxi-2026', name: 'Deep South – Biloxi, MS', date: 'February 14-15, 2026' },
-    { id: 'uca-nationals-2026', name: 'UCA Nationals – Orlando, FL', date: 'March 14-15, 2026' },
-    { id: 'one-up-2026', name: 'One Up – Nashville, TN', date: 'March 28-30, 2026' }
+    { id: 'cheersport-memphis-2025', name: 'Cheersport – Memphis, TN', date: 'November 9, 2025' }
   ];
 
   const toggleLevel = (lvl) => {
@@ -144,12 +132,15 @@ export default function HomePage() {
                       </li>
                     )}
                     {visibleTeams.size > 0 && teamPractice.some((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)) && (
-                      <li className="bg-yellow-50 shadow p-2 rounded">
-                        <p className="text-yellow-700 font-semibold mb-1">Team Practices</p>
-                        {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
-                          <div key={`team-${idx}-${day}`} className="text-sm text-gray-700">{teamIcons[entry.team]} {entry.team}: 6:00 PM – 8:00 PM</div>
-                        ))}
-                      </li>
+                      <>
+                        <div className="h-2"></div>
+                        <li className="bg-yellow-50 shadow p-2 rounded">
+                          <p className="text-yellow-700 font-semibold mb-1">Team Practices</p>
+                          {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
+                            <div key={`team-${idx}-${day}`} className="text-sm text-gray-700">{teamIcons[entry.team]} {entry.team}: 6:00 PM – 8:00 PM</div>
+                          ))}
+                        </li>
+                      </>
                     )}
                   </ul>
                 </td>
