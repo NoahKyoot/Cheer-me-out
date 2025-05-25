@@ -10,24 +10,6 @@ export default function HomePage() {
 
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
 
-  const tumblingSchedule = [
-    { level: 'Level 3', day: 'Mon', time: '5:00 PM – 6:00 PM' },
-    { level: 'Level 5/6', day: 'Mon', time: '5:00 PM – 6:00 PM' },
-    { level: 'Level 4', day: 'Mon', time: '6:00 PM – 7:00 PM' },
-    { level: 'Level 2', day: 'Mon', time: '7:00 PM – 8:00 PM' },
-    { level: 'Level 2', day: 'Tue', time: '5:00 PM – 6:00 PM' },
-    { level: 'Level 1', day: 'Tue', time: '6:00 PM – 7:00 PM' },
-    { level: 'Level 3', day: 'Tue', time: '7:00 PM – 8:00 PM' },
-    { level: 'Level 1', day: 'Wed', time: '5:00 PM – 6:00 PM' },
-    { level: 'Level 3', day: 'Wed', time: '6:00 PM – 7:00 PM' },
-    { level: 'Level 4', day: 'Wed', time: '7:00 PM – 8:00 PM' },
-    { level: 'Level 5/6', day: 'Wed', time: '7:00 PM – 8:00 PM' },
-    { level: 'Level 4', day: 'Thu', time: '5:00 PM – 6:00 PM' },
-    { level: 'Level 5/6', day: 'Thu', time: '5:00 PM – 6:00 PM' },
-    { level: 'Level 2', day: 'Thu', time: '6:00 PM – 7:00 PM' },
-    { level: 'Level 1', day: 'Thu', time: '7:00 PM – 8:00 PM' }
-  ];
-
   const teamPractice = [
     { team: 'Blaze', days: ['Mon', 'Wed'] },
     { team: 'Majors', days: ['Tue', 'Thu'] }
@@ -37,12 +19,6 @@ export default function HomePage() {
     { id: 'showcase-memphis-2025', name: 'Showcase – Memphis, TN', date: 'November 8, 2025' },
     { id: 'cheersport-memphis-2025', name: 'Cheersport – Memphis, TN', date: 'November 9, 2025' }
   ];
-
-  const toggleLevel = (lvl) => {
-    const updated = new Set(visibleLevels);
-    updated.has(lvl) ? updated.delete(lvl) : updated.add(lvl);
-    setVisibleLevels(updated);
-  };
 
   const toggleTeam = (team) => {
     const updated = new Set(visibleTeams);
@@ -66,11 +42,11 @@ export default function HomePage() {
       </div>
 
       <div className="flex flex-wrap justify-center gap-4 mb-6">
-        <button onClick={() => toggleTeam('Blaze')} className="rounded overflow-hidden">
-          <img src="/images/Blaze.png" alt="Blaze" className={`w-16 h-16 object-cover ${visibleTeams.has('Blaze') ? 'ring-4 ring-yellow-500' : ''}`} />
+        <button onClick={() => toggleTeam('Blaze')} className="rounded overflow-hidden w-20 h-20">
+          <img src="/images/Blaze.png" alt="Blaze" className={`w-full h-full object-cover ${visibleTeams.has('Blaze') ? 'ring-4 ring-yellow-500' : ''}`} />
         </button>
-        <button onClick={() => toggleTeam('Majors')} className="rounded overflow-hidden">
-          <img src="/images/Majors.png" alt="Majors" className={`w-16 h-16 object-cover ${visibleTeams.has('Majors') ? 'ring-4 ring-yellow-500' : ''}`} />
+        <button onClick={() => toggleTeam('Majors')} className="rounded overflow-hidden w-20 h-20">
+          <img src="/images/Majors.png" alt="Majors" className={`w-full h-full object-cover ${visibleTeams.has('Majors') ? 'ring-4 ring-yellow-500' : ''}`} />
         </button>
       </div>
 
