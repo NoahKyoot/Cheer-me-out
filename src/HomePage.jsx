@@ -106,12 +106,14 @@ export default function HomePage() {
                 Memphis Pride Cheer Teams
               </Link>
             </h3>
-            <div className="flex flex-wrap justify-center items-center gap-4 mt-3">
+            {/* UPDATED: Wrapper for team image buttons for better mobile responsiveness */}
+            <div className="flex items-center overflow-x-auto py-2 gap-3 sm:flex-wrap sm:justify-center sm:overflow-x-visible sm:gap-4 mt-3">
               {teamPractice.map((teamInfo) => (
                 <button
                   key={teamInfo.team}
                   onClick={() => toggleTeam(teamInfo.team)}
-                  className={`rounded overflow-hidden w-20 h-20 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
+                  // UPDATED: Responsive sizing for team image buttons
+                  className={`flex-shrink-0 rounded overflow-hidden w-16 h-16 sm:w-20 sm:h-20 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
                     visibleTeams.has(teamInfo.team) ? 'ring-4 ring-yellow-500 ring-inset bg-yellow-50 border-yellow-300' : 'bg-white border-gray-300 hover:border-yellow-400'
                   }`}
                   title={teamInfo.team}
@@ -127,7 +129,7 @@ export default function HomePage() {
           </div>
         </div>
         
-        {/* Calendar Table */}
+        {/* Calendar Table (directly below filters and week nav) */}
         <div className="overflow-x-auto bg-white rounded-lg shadow">
             <table className="min-w-full border-collapse">
               <thead>
@@ -171,7 +173,7 @@ export default function HomePage() {
             </table>
         </div>
         
-        {/* UPDATED "Next Up!" Competition Section */}
+        {/* "Next Up!" Competition Section */}
         <section>
           <div className="text-center mb-6">
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Next Up!</h2>
@@ -190,7 +192,7 @@ export default function HomePage() {
                   />
                 </div>
               )}
-              <div className={`text-center sm:text-left flex-grow ${!nextCompetition.logo ? 'w-full' : ''}`}> {/* Allow text to take full width if no logo */}
+              <div className={`text-center sm:text-left flex-grow ${!nextCompetition.logo ? 'w-full' : ''}`}>
                 <h3 className="text-2xl font-bold text-pink-600 mb-1">{nextCompetition.eventName}</h3>
                 {nextCompetition.brand && <p className="text-sm text-gray-500 mb-2">{nextCompetition.brand}</p>}
                 <p className="text-gray-700 text-md mb-1">
@@ -202,7 +204,7 @@ export default function HomePage() {
                   </p>
                 )}
                 {nextCompetition.description && (
-                  <p className="text-gray-600 text-sm mt-2 mb-4 line-clamp-3 hover:line-clamp-none transition-all"> {/* Show more on hover */}
+                  <p className="text-gray-600 text-sm mt-2 mb-4 line-clamp-3 hover:line-clamp-none transition-all">
                     {nextCompetition.description}
                   </p>
                 )}
