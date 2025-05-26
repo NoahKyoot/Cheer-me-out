@@ -5,7 +5,7 @@ import { useParams, Link as RouterLink } from 'react-router-dom'; // Using alias
 // Ideally, this detailed data would come from a shared file/API and include more info.
 // Ensure 'slug' matches what's in TeamsPage.jsx and 'imageFilename' matches your files in public/images/
 const allTeamsDetails = [
-  { slug: 'majors', name: 'Majors', imageFilename: 'Majors1.png', description: 'Our elite Majors team, known for their precision and high-flying stunts. They compete at national levels.', schedule: 'Tuesdays & Thursdays, 7:00 PM - 9:00 PM', coach: 'Sarah "Coach S" Williams' },
+  { slug: 'majors', name: 'Majors', imageFilename: 'Majors.png', description: 'Our elite Majors team, known for their precision and high-flying stunts. They compete at national levels.', schedule: 'Tuesdays & Thursdays, 7:00 PM - 9:00 PM', coach: 'Sarah "Coach S" Williams' },
   { slug: 'legacy', name: 'Legacy', imageFilename: 'Legacy.png', description: 'Building on a strong tradition, Legacy showcases intricate choreography and teamwork.', schedule: 'Mondays & Wednesdays, 7:00 PM - 9:00 PM', coach: 'Michael "Mike" Chen' },
   { slug: 'blaze', name: 'Blaze', imageFilename: 'Blaze.png', description: 'Blaze brings fiery energy and dynamic routines to every performance!', schedule: 'Mondays & Wednesdays, 6:00 PM - 8:00 PM', coach: 'Linda Rodriguez' },
   { slug: 'dynasty', name: 'Dynasty', imageFilename: 'Dynasty.png', description: 'A powerhouse team aiming to build a winning Dynasty with strength and grace.', schedule: 'Tuesdays & Thursdays, 6:00 PM - 8:00 PM', coach: 'David Miller' },
