@@ -1,12 +1,21 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  format, addMonths, subMonths, startOfMonth, endOfMonth,
-  startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isToday, getDay,
+  format,
+  addMonths,
+  subMonths,
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  eachDayOfInterval,
+  isSameMonth,
+  isToday,
+  getDay,
 } from 'date-fns';
-import { allCompetitions } from './data/competitionsData';
+import { allCompetitions } from './data/competitionsData'; // Assuming this path is correct
 
-// Data for filters (ideally import from shared data files)
+// Data for filters & calendar display (Ideally, import from shared data files)
 const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
 const teamIcons = { 
   Majors: '🌟', Legacy: '👑', Blaze: '🔥', Dynasty: '🏰', Reign: '💎',
@@ -33,9 +42,9 @@ const dayNameToNumber = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6
 
 export default function MonthCalendarPage() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [visibleLevels, setVisibleLevels] = useState(new Set()); // State for tumbling filters
-  const [visibleTeams, setVisibleTeams] = useState(new Set());   // State for team filters
-  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const [visibleLevels, setVisibleLevels] = useState(new Set());
+  const [visibleTeams, setVisibleTeams] = useState(new Set());
+  const daysOfWeekNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; // Renamed for clarity
 
   const firstDayCurrentMonth = startOfMonth(currentMonth);
   const startDateForGrid = startOfWeek(firstDayCurrentMonth, { weekStartsOn: 0 });
@@ -46,7 +55,6 @@ export default function MonthCalendarPage() {
     [startDateForGrid, endDateForGrid]
   );
 
-  // Toggle functions for filters
   const toggleLevel = (lvl) => {
     const updated = new Set(visibleLevels);
     updated.has(lvl) ? updated.delete(lvl) : updated.add(lvl);
@@ -65,11 +73,10 @@ export default function MonthCalendarPage() {
 
     allCompetitions.forEach(comp => {
       if (comp.sortableDate === formattedDay) {
-        events.push({ type: 'Competition', name: comp.eventName, id: comp.id, time: 'All Day (Check Details)' });
+        events.push({ type: 'Competition', name: comp.eventName, id: comp.id, time: comp.fullDates || comp.dateString });
       }
     });
 
-    // Apply tumbling filters
     if (visibleLevels.size === 0 || tumblingSchedule.some(item => visibleLevels.has(item.level))) {
         tumblingSchedule.forEach(item => {
             if (dayNameToNumber[item.dayName] === dayOfWeekNumber) {
@@ -80,7 +87,6 @@ export default function MonthCalendarPage() {
         });
     }
     
-    // Apply team filters
     if (visibleTeams.size === 0 || teamPractice.some(practice => visibleTeams.has(practice.team))) {
         teamPractice.forEach(practice => {
             if (practice.days.some(d => dayNameToNumber[d] === dayOfWeekNumber)) {
@@ -99,9 +105,8 @@ export default function MonthCalendarPage() {
 
   return (
     <main className="min-h-screen p-4 md:p-6 bg-slate-900 text-slate-200">
-      <div className="max-w-5xl mx-auto"> {/* You can change max-w-5xl to max-w-7xl if you want it wider */}
-        {/* Header with Page Title, Month Navigation, Back Link, Print Button */}
-        <header className="text-center mb-6 md:mb-8 no-print"> {/* Added no-print class */}
+      <div className="max-w-6xl mx-auto"> {/* Increased max-width for better month view */}
+        <header className="text-center mb-6 md:mb-8 no-print">
           <div className="flex items-center justify-between mb-4">
             <Link
               to="/"
@@ -114,7 +119,7 @@ export default function MonthCalendarPage() {
             </Link>
             <button 
               onClick={handlePrint}
-              className="px-4 py-2 text-sm bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 flex items-center no-print" /* Added no-print class */
+              className="px-4 py-2 text-sm bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 flex items-center no-print"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v6a2 2 0 002 2h1v-4a1 1 0 011-1h8a1 1 0 011 1v4h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7V9h6v3z" clipRule="evenodd" />
@@ -130,7 +135,7 @@ export default function MonthCalendarPage() {
             >
               <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
             </button>
-            <h1 className="text-3xl sm:text-4xl font-bold text-blue-400 w-64 text-center">
+            <h1 className="text-3xl sm:text-4xl font-bold text-blue-400 w-64 text-center tabular-nums">
               {format(currentMonth, 'MMMM yyyy')}
             </h1>
             <button
@@ -143,9 +148,8 @@ export default function MonthCalendarPage() {
           </div>
         </header>
 
-        {/* Filter Buttons Section - ADDED HERE & HIDDEN ON PRINT */}
+        {/* Filter Buttons Section */}
         <div className="space-y-6 mb-6 md:mb-8 no-print">
-          {/* Team Filters */}
           <div className="text-center p-4 bg-slate-800 rounded-lg shadow">
             <h3 className="text-xl font-semibold text-blue-400 mb-3">Filter by Team</h3>
             <div className="flex items-center overflow-x-auto py-2 gap-3 sm:flex-wrap sm:justify-center sm:overflow-x-visible sm:gap-4">
@@ -169,7 +173,6 @@ export default function MonthCalendarPage() {
               ))}
             </div>
           </div>
-          {/* Tumbling Filters */}
           <div className="text-center p-4 bg-slate-800 rounded-lg shadow">
             <h3 className="text-xl font-semibold text-blue-400 mb-3">Filter by Tumbling Level</h3>
             <div className="flex flex-wrap justify-center gap-2">
@@ -189,13 +192,15 @@ export default function MonthCalendarPage() {
             </div>
           </div>
         </div>
-        {/* End of Filter Buttons Section */}
 
-        {/* Calendar Grid (This section WILL be printed) */}
-        <div className="grid grid-cols-7 gap-px bg-slate-700 border border-slate-700 rounded-lg overflow-hidden shadow-lg">
-          {daysOfWeek.map(day => (
-            <div key={day} className="py-2 text-center font-semibold text-blue-300 bg-slate-800 text-xs sm:text-sm">
-              {day}
+        {/* Calendar Grid */}
+        <div 
+          id="month-calendar-grid" // Added ID for print styles
+          className="grid grid-cols-7 gap-px bg-slate-700 border border-slate-700 rounded-lg overflow-hidden shadow-lg"
+        >
+          {daysOfWeekNames.map(dayName => ( // Changed variable name here
+            <div key={dayName} className="py-2 text-center font-semibold text-blue-300 bg-slate-800 text-xs sm:text-sm">
+              {dayName}
             </div>
           ))}
           {calendarDays.map((dayDate, index) => {
@@ -203,22 +208,23 @@ export default function MonthCalendarPage() {
             return (
               <div
                 key={index}
-                className={`p-1.5 sm:p-2 min-h-[100px] sm:min-h-[140px] md:min-h-[160px] overflow-hidden transition-colors duration-150 ease-in-out
-                  ${isSameMonth(dayDate, currentMonth) ? 'bg-slate-800 hover:bg-slate-700/80' : 'bg-slate-800/50 text-slate-500 hover:bg-slate-700/50'}
+                className={`p-1.5 sm:p-2 min-h-[100px] sm:min-h-[120px] md:min-h-[140px] overflow-hidden transition-colors duration-150 ease-in-out
+                  ${isSameMonth(dayDate, currentMonth) ? 'bg-slate-800 hover:bg-slate-700/80' : 'bg-slate-800/40 text-slate-600 hover:bg-slate-700/50'}
                   ${isToday(dayDate) ? 'ring-2 ring-red-500 ring-inset' : ''}
                 `}
               >
-                <span className={`text-xs sm:text-sm font-medium ${isToday(dayDate) ? 'text-red-400' : isSameMonth(dayDate, currentMonth) ? 'text-slate-100' : 'text-slate-600'}`}>
+                <span className={`text-xs sm:text-sm font-medium ${isToday(dayDate) ? 'text-red-400' : isSameMonth(dayDate, currentMonth) ? 'text-slate-100' : 'text-slate-500'}`}>
                   {format(dayDate, 'd')}
                 </span>
-                <div className="mt-1 space-y-0.5 text-xxs sm:text-xs overflow-y-auto max-h-[70px] sm:max-h-[100px] md:max-h-[120px] no-scrollbar-thin"> {/* Custom class for thinner scrollbar if needed */}
+                <div className="mt-1 space-y-0.5 text-xxs sm:text-xs overflow-y-auto max-h-[70px] sm:max-h-[90px] md:max-h-[110px] no-scrollbar-thin">
                   {dayEvents.map((event, idx) => (
                     <div 
                       key={idx} 
-                      className={`p-1 rounded text-left text-opacity-90 ${
-                        event.type === 'Competition' ? 'bg-red-700/70 text-red-100' : 
-                        event.type === 'Tumbling' ? 'bg-blue-700/70 text-blue-100' : 
-                        'bg-purple-700/70 text-purple-100' // Team Practice
+                      // Added event-item-print class for specific print styling
+                      className={`p-1 rounded text-left text-opacity-90 event-item-print ${ 
+                        event.type === 'Competition' ? 'bg-red-800/80 hover:bg-red-700/80 text-red-100' : 
+                        event.type === 'Tumbling' ? 'bg-blue-800/80 hover:bg-blue-700/80 text-blue-100' : 
+                        'bg-purple-800/80 hover:bg-purple-700/80 text-purple-100'
                       }`}
                       title={`${event.name}${event.time ? ` - ${event.time}` : ''}`}
                     >
@@ -231,7 +237,7 @@ export default function MonthCalendarPage() {
             );
           })}
         </div> {/* End of Calendar Grid */}
-      </div> {/* End of max-w container */}
+      </div> 
     </main>
   );
 }
