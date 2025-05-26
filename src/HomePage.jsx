@@ -13,7 +13,7 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
-  const weekEnd = addDays(weekStart, 6);
+  const weekEnd = addDays(weekStart, 6); // Define weekEnd for date display
 
   const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
   const teamIcons = { 
@@ -64,7 +64,6 @@ export default function HomePage() {
   const getDateForDay = (index) => format(addDays(weekStart, index), 'MMM d');
 
   const handleShowMonth = () => {
-    console.log('"View Full Month Calendar" button clicked - navigating to /month-calendar');
     navigate('/month-calendar');
   };
 
@@ -77,9 +76,8 @@ export default function HomePage() {
 
       <div className="max-w-7xl mx-auto space-y-8">
         
-        {/* Button Filters Section */}
+        {/* Button Filters Section - Teams first, then Tumbling */}
         <div className="space-y-6">
-          {/* Teams Filters First */}
           <div className="text-center">
             <h3 className="text-xl font-semibold text-blue-400 mb-1">
               <Link to="/teams" className="hover:text-blue-300 hover:underline transition-colors duration-150 ease-in-out">
@@ -91,7 +89,7 @@ export default function HomePage() {
                 <button
                   key={teamInfo.team}
                   onClick={() => toggleTeam(teamInfo.team)}
-                  className={`flex-shrink-0 rounded overflow-hidden w-24 h-24 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
+                  className={`flex-shrink-0 rounded overflow-hidden w-28 h-28 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
                     visibleTeams.has(teamInfo.team) 
                       ? 'ring-4 ring-red-500 ring-inset bg-slate-700 border-red-500' 
                       : 'bg-slate-800 border-slate-600 hover:border-red-500'
@@ -107,7 +105,6 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-          {/* Tumbling Filters Second */}
           <div className="text-center">
             <h3 className="text-xl font-semibold text-blue-400 mb-3">
               <Link to="/tumbling-levels" className="hover:text-blue-300 hover:underline transition-colors">
@@ -132,8 +129,8 @@ export default function HomePage() {
           </div>
         </div>
         
-        {/* Week Navigation (Arrows and Date Range) */}
-        <div className="flex items-center justify-center gap-3 sm:gap-6"> {/* This block will be spaced by parent space-y-8 */}
+        {/* Week Navigation */}
+        <div className="flex items-center justify-center gap-3 sm:gap-6">
           <button
             onClick={() => setWeekOffset(weekOffset - 1)}
             className="p-2 rounded-full hover:bg-slate-700 focus:bg-slate-600 focus:outline-none transition-colors"
@@ -142,14 +139,14 @@ export default function HomePage() {
             <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
           </button>
 
-          <div className="text-center"> {/* Removed flex-grow for tighter centering of this block */}
+          <div className="text-center">
             <h4 className="text-lg sm:text-xl font-semibold text-slate-100 whitespace-nowrap">
-              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d,<y_bin_46>)}
+              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')} {/* Corrected format */}
             </h4>
             {weekOffset !== 0 && (
               <button
                 onClick={() => setWeekOffset(0)}
-                className="text-xs text-red-500 hover:text-red-400 hover:underline focus:outline-none mt-1" // Added mt-1 for spacing
+                className="text-xs text-red-500 hover:text-red-400 hover:underline focus:outline-none mt-1"
               >
                 (Go to This Week)
               </button>
@@ -180,7 +177,6 @@ export default function HomePage() {
                   {daysOfWeek.map((day, dayIndex) => (
                     <td key={day} className={`align-top p-2 border border-slate-700 w-1/7 ${dayIndex === 0 ? 'border-l-0' : ''} ${dayIndex === daysOfWeek.length - 1 ? 'border-r-0' : ''}`}>
                       <ul className="space-y-2">
-                        {/* ... Tumbling and Team Practice list items ... */}
                         {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
                           <li className="bg-slate-700 shadow-sm p-2 rounded">
                             <p className="text-blue-300 font-semibold text-sm mb-1">All Star Tumbling</p>
@@ -210,7 +206,7 @@ export default function HomePage() {
             </table>
         </div>
         
-        {/* "View Full Month Calendar" Button - MOVED HERE */}
+        {/* "View Full Month Calendar" Button - Positioned below calendar */}
         <div className="text-center"> 
           <button
             onClick={handleShowMonth}
@@ -232,7 +228,6 @@ export default function HomePage() {
             <div className={`flex overflow-x-auto pb-4 pt-2 px-4 sm:px-6 gap-6 snap-x snap-mandatory ${
                 upcomingCompetitions.length === 1 ? 'justify-center' : ''
             }`}>
-              {/* ... upcomingCompetitions.map(...) ... */}
               {upcomingCompetitions.map((comp) => (
                 <div
                   key={comp.id}
