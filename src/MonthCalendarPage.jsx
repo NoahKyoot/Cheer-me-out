@@ -1,19 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  format,
-  addMonths,
-  subMonths,
-  startOfMonth,
-  endOfMonth,
-  startOfWeek,
-  endOfWeek,
-  eachDayOfInterval,
-  isSameMonth,
-  isToday,
-  getDay,
+  format, addMonths, subMonths, startOfMonth, endOfMonth,
+  startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isToday, getDay,
 } from 'date-fns';
-import { allCompetitions } from './data/competitionsData'; // Assuming this path is correct
+import { allCompetitions } from './data/competitionsData'; 
 
 // Data for filters & calendar display (Ideally, import from shared data files)
 const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
@@ -42,9 +33,9 @@ const dayNameToNumber = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6
 
 export default function MonthCalendarPage() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [visibleLevels, setVisibleLevels] = useState(new Set());
-  const [visibleTeams, setVisibleTeams] = useState(new Set());
-  const daysOfWeekNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; // Renamed for clarity
+  const [visibleLevels, setVisibleLevels] = useState(new Set()); 
+  const [visibleTeams, setVisibleTeams] = useState(new Set());   
+  const daysOfWeekNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   const firstDayCurrentMonth = startOfMonth(currentMonth);
   const startDateForGrid = startOfWeek(firstDayCurrentMonth, { weekStartsOn: 0 });
@@ -71,26 +62,29 @@ export default function MonthCalendarPage() {
     const dayOfWeekNumber = getDay(day);
     const formattedDay = format(day, 'yyyy-MM-dd');
 
+    // Competitions always show, not affected by these filters
     allCompetitions.forEach(comp => {
       if (comp.sortableDate === formattedDay) {
         events.push({ type: 'Competition', name: comp.eventName, id: comp.id, time: comp.fullDates || comp.dateString });
       }
     });
 
-    if (visibleLevels.size === 0 || tumblingSchedule.some(item => visibleLevels.has(item.level))) {
+    // UPDATED: Tumbling Schedule - only show if a level filter is active
+    if (visibleLevels.size > 0) { 
         tumblingSchedule.forEach(item => {
             if (dayNameToNumber[item.dayName] === dayOfWeekNumber) {
-                if (visibleLevels.size === 0 || visibleLevels.has(item.level)) {
+                if (visibleLevels.has(item.level)) { // Only show if this specific level is selected
                     events.push({ type: 'Tumbling', name: `${levelIcons[item.level]} ${item.level}`, time: item.time });
                 }
             }
         });
     }
     
-    if (visibleTeams.size === 0 || teamPractice.some(practice => visibleTeams.has(practice.team))) {
+    // UPDATED: Team Practices - only show if a team filter is active
+    if (visibleTeams.size > 0) {
         teamPractice.forEach(practice => {
             if (practice.days.some(d => dayNameToNumber[d] === dayOfWeekNumber)) {
-                if (visibleTeams.size === 0 || visibleTeams.has(practice.team)) {
+                if (visibleTeams.has(practice.team)) { // Only show if this specific team is selected
                     events.push({ type: 'Team Practice', name: `${teamIcons[practice.team]} ${practice.team}`, time: '6:00 PM – 8:00 PM (Typical)' });
                 }
             }
@@ -105,7 +99,7 @@ export default function MonthCalendarPage() {
 
   return (
     <main className="min-h-screen p-4 md:p-6 bg-slate-900 text-slate-200">
-      <div className="max-w-6xl mx-auto"> {/* Increased max-width for better month view */}
+      <div className="max-w-6xl mx-auto">
         <header className="text-center mb-6 md:mb-8 no-print">
           <div className="flex items-center justify-between mb-4">
             <Link
@@ -195,10 +189,10 @@ export default function MonthCalendarPage() {
 
         {/* Calendar Grid */}
         <div 
-          id="month-calendar-grid" // Added ID for print styles
+          id="month-calendar-grid"
           className="grid grid-cols-7 gap-px bg-slate-700 border border-slate-700 rounded-lg overflow-hidden shadow-lg"
         >
-          {daysOfWeekNames.map(dayName => ( // Changed variable name here
+          {daysOfWeekNames.map(dayName => (
             <div key={dayName} className="py-2 text-center font-semibold text-blue-300 bg-slate-800 text-xs sm:text-sm">
               {dayName}
             </div>
@@ -220,11 +214,10 @@ export default function MonthCalendarPage() {
                   {dayEvents.map((event, idx) => (
                     <div 
                       key={idx} 
-                      // Added event-item-print class for specific print styling
                       className={`p-1 rounded text-left text-opacity-90 event-item-print ${ 
-                        event.type === 'Competition' ? 'bg-red-800/80 hover:bg-red-700/80 text-red-100' : 
-                        event.type === 'Tumbling' ? 'bg-blue-800/80 hover:bg-blue-700/80 text-blue-100' : 
-                        'bg-purple-800/80 hover:bg-purple-700/80 text-purple-100'
+                        event.type === 'Competition' ? 'bg-red-700/70 text-red-100' : 
+                        event.type === 'Tumbling' ? 'bg-blue-700/70 text-blue-100' : 
+                        'bg-purple-700/70 text-purple-100'
                       }`}
                       title={`${event.name}${event.time ? ` - ${event.time}` : ''}`}
                     >
@@ -236,8 +229,8 @@ export default function MonthCalendarPage() {
               </div>
             );
           })}
-        </div> {/* End of Calendar Grid */}
-      </div> 
+        </div>
+      </div>
     </main>
   );
 }
