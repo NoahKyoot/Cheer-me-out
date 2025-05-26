@@ -105,30 +105,29 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-
-          {/* UPDATED All Star Tumbling Levels Group with Logos */}
+          
+          {/* All Star Tumbling Levels Group with Logos */}
           <div className="text-center">
             <h3 className="text-xl font-semibold text-blue-400 mb-3">
               <Link to="/tumbling-levels" className="hover:text-blue-300 hover:underline transition-colors">
                 All Star Tumbling
               </Link>
             </h3>
-            {/* Outer container for Logo - Buttons - Logo */}
             <div className="flex items-center justify-center gap-3 sm:gap-4 md:gap-6">
               {/* Left Logo */}
               <img
-                src="/images/Levelup.png" // Assuming logo is in public/images/
+                src="/images/Levelup.png"
                 alt="Level Up Logo"
-                className="h-10 w-auto sm:h-12 flex-shrink-0" // Adjust size as needed
+                // UPDATED: Size matches team boxes, object-contain added
+                className="w-28 h-28 sm:w-24 sm:h-24 object-contain flex-shrink-0" 
               />
 
-              {/* Container for the actual level filter buttons to allow them to wrap */}
               <div className="flex flex-wrap justify-center gap-2">
                 {Object.keys(levelIcons).map((lvl) => (
                   <button
                     key={lvl}
                     onClick={() => toggleLevel(lvl)}
-                    className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded text-xs sm:text-sm transition-colors ${ /* Adjusted padding & font for potentially less space */
+                    className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded text-xs sm:text-sm transition-colors ${
                       visibleLevels.has(lvl) 
                         ? 'bg-red-600 text-white' 
                         : 'bg-slate-700 text-slate-100 hover:bg-slate-600'
@@ -141,9 +140,10 @@ export default function HomePage() {
 
               {/* Right Logo */}
               <img
-                src="/images/Levelup.png" // Assuming logo is in public/images/
+                src="/images/Levelup.png"
                 alt="Level Up Logo"
-                className="h-10 w-auto sm:h-12 flex-shrink-0" // Adjust size as needed
+                // UPDATED: Size matches team boxes, object-contain added
+                className="w-28 h-28 sm:w-24 sm:h-24 object-contain flex-shrink-0"
               />
             </div>
           </div>
@@ -161,7 +161,7 @@ export default function HomePage() {
 
           <div className="text-center">
             <h4 className="text-lg sm:text-xl font-semibold text-slate-100 whitespace-nowrap">
-            {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')}
+              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d,<y_bin_46>)}
             </h4>
             {weekOffset !== 0 && (
               <button
@@ -184,7 +184,7 @@ export default function HomePage() {
 
         {/* Calendar Table */}
         <div className="overflow-x-auto bg-slate-800 rounded-lg shadow-md">
-            {/* ... Table ... */}
+            {/* ... Table structure ... */}
             <table className="min-w-full border-collapse">
               <thead>
                 <tr className="bg-blue-800">
@@ -198,7 +198,6 @@ export default function HomePage() {
                   {daysOfWeek.map((day, dayIndex) => (
                     <td key={day} className={`align-top p-2 border border-slate-700 w-1/7 ${dayIndex === 0 ? 'border-l-0' : ''} ${dayIndex === daysOfWeek.length - 1 ? 'border-r-0' : ''}`}>
                       <ul className="space-y-2">
-                        {/* ... Tumbling and Team Practice list items ... */}
                         {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
                           <li className="bg-slate-700 shadow-sm p-2 rounded">
                             <p className="text-blue-300 font-semibold text-sm mb-1">All Star Tumbling</p>
@@ -240,6 +239,7 @@ export default function HomePage() {
 
         {/* Upcoming Competitions Section */}
         <section>
+          {/* ... (Upcoming competitions display code remains the same) ... */}
           <div className="text-center mb-6">
             <h2 className="text-3xl font-bold text-slate-100 mb-2">Upcoming Competitions</h2>
             <Link to="/competitions" className="text-sm text-red-500 hover:text-red-400 hover:underline transition-colors">
@@ -250,7 +250,6 @@ export default function HomePage() {
             <div className={`flex overflow-x-auto pb-4 pt-2 px-4 sm:px-6 gap-6 snap-x snap-mandatory ${
                 upcomingCompetitions.length === 1 ? 'justify-center' : ''
             }`}>
-              {/* ... upcomingCompetitions.map(...) ... */}
               {upcomingCompetitions.map((comp) => (
                 <div
                   key={comp.id}
