@@ -1,10 +1,19 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  format, addMonths, subMonths, startOfMonth, endOfMonth,
-  startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isToday, getDay,
+  format,
+  addMonths,
+  subMonths,
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  eachDayOfInterval,
+  isSameMonth,
+  isToday,
+  getDay,
 } from 'date-fns';
-import { allCompetitions } from './data/competitionsData'; 
+import { allCompetitions } from './data/competitionsData'; // Assuming this path is correct
 
 // Data for filters & calendar display (Ideally, import from shared data files)
 const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
@@ -33,8 +42,8 @@ const dayNameToNumber = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6
 
 export default function MonthCalendarPage() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [visibleLevels, setVisibleLevels] = useState(new Set()); 
-  const [visibleTeams, setVisibleTeams] = useState(new Set());   
+  const [visibleLevels, setVisibleLevels] = useState(new Set());
+  const [visibleTeams, setVisibleTeams] = useState(new Set());
   const daysOfWeekNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   const firstDayCurrentMonth = startOfMonth(currentMonth);
@@ -62,29 +71,26 @@ export default function MonthCalendarPage() {
     const dayOfWeekNumber = getDay(day);
     const formattedDay = format(day, 'yyyy-MM-dd');
 
-    // Competitions always show, not affected by these filters
     allCompetitions.forEach(comp => {
       if (comp.sortableDate === formattedDay) {
         events.push({ type: 'Competition', name: comp.eventName, id: comp.id, time: comp.fullDates || comp.dateString });
       }
     });
 
-    // UPDATED: Tumbling Schedule - only show if a level filter is active
     if (visibleLevels.size > 0) { 
         tumblingSchedule.forEach(item => {
             if (dayNameToNumber[item.dayName] === dayOfWeekNumber) {
-                if (visibleLevels.has(item.level)) { // Only show if this specific level is selected
+                if (visibleLevels.has(item.level)) {
                     events.push({ type: 'Tumbling', name: `${levelIcons[item.level]} ${item.level}`, time: item.time });
                 }
             }
         });
     }
     
-    // UPDATED: Team Practices - only show if a team filter is active
     if (visibleTeams.size > 0) {
         teamPractice.forEach(practice => {
             if (practice.days.some(d => dayNameToNumber[d] === dayOfWeekNumber)) {
-                if (visibleTeams.has(practice.team)) { // Only show if this specific team is selected
+                if (visibleTeams.has(practice.team)) {
                     events.push({ type: 'Team Practice', name: `${teamIcons[practice.team]} ${practice.team}`, time: '6:00 PM – 8:00 PM (Typical)' });
                 }
             }
@@ -130,7 +136,7 @@ export default function MonthCalendarPage() {
               <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
             </button>
             <h1 className="text-3xl sm:text-4xl font-bold text-blue-400 w-64 text-center tabular-nums">
-              {format(currentMonth, 'MMMM yyyy')}
+              {format(currentMonth, 'MMMM yyyy')} {/* Completed format string */}
             </h1>
             <button
               onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
@@ -142,10 +148,12 @@ export default function MonthCalendarPage() {
           </div>
         </header>
 
-        {/* Filter Buttons Section */}
-        <div className="space-y-6 mb-6 md:mb-8 no-print">
-          <div className="text-center p-4 bg-slate-800 rounded-lg shadow">
-            <h3 className="text-xl font-semibold text-blue-400 mb-3">Filter by Team</h3>
+        {/* Combined Filter Buttons Section */}
+        <div className="p-4 md:p-6 bg-slate-800 rounded-lg shadow-md no-print mb-6 md:mb-8">
+          <h3 className="text-2xl font-bold text-blue-400 mb-4 text-center">Filter by Teams and Tumbling</h3>
+          
+          {/* Team Filters - Sub-section */}
+          <div className="mb-6">
             <div className="flex items-center overflow-x-auto py-2 gap-3 sm:flex-wrap sm:justify-center sm:overflow-x-visible sm:gap-4">
               {teamPractice.map((tp) => (
                 <button
@@ -167,8 +175,9 @@ export default function MonthCalendarPage() {
               ))}
             </div>
           </div>
-          <div className="text-center p-4 bg-slate-800 rounded-lg shadow">
-            <h3 className="text-xl font-semibold text-blue-400 mb-3">Filter by Tumbling Level</h3>
+
+          {/* Tumbling Filters - Sub-section */}
+          <div>
             <div className="flex flex-wrap justify-center gap-2">
               {Object.keys(levelIcons).map((lvl) => (
                 <button
@@ -186,6 +195,7 @@ export default function MonthCalendarPage() {
             </div>
           </div>
         </div>
+        {/* End of Filter Buttons Section */}
 
         {/* Calendar Grid */}
         <div 
@@ -210,14 +220,14 @@ export default function MonthCalendarPage() {
                 <span className={`text-xs sm:text-sm font-medium ${isToday(dayDate) ? 'text-red-400' : isSameMonth(dayDate, currentMonth) ? 'text-slate-100' : 'text-slate-500'}`}>
                   {format(dayDate, 'd')}
                 </span>
-                <div className="mt-1 space-y-0.5 text-xxs sm:text-xs overflow-y-auto max-h-[70px] sm:max-h-[90px] md:max-h-[110px] no-scrollbar-thin">
+                <div className="mt-1 space-y-0.5 text-xxs sm:text-xs overflow-y-auto max-h-[70px] sm:max-h-[90px] md:max-h-[110px] no-scrollbar-thin"> {/* Custom class for thinner scrollbar if needed */}
                   {dayEvents.map((event, idx) => (
                     <div 
                       key={idx} 
                       className={`p-1 rounded text-left text-opacity-90 event-item-print ${ 
-                        event.type === 'Competition' ? 'bg-red-700/70 text-red-100' : 
-                        event.type === 'Tumbling' ? 'bg-blue-700/70 text-blue-100' : 
-                        'bg-purple-700/70 text-purple-100'
+                        event.type === 'Competition' ? 'bg-red-700/70 hover:bg-red-600/70 text-red-100' : 
+                        event.type === 'Tumbling' ? 'bg-blue-700/70 hover:bg-blue-600/70 text-blue-100' : 
+                        'bg-purple-700/70 hover:bg-purple-600/70 text-purple-100'
                       }`}
                       title={`${event.name}${event.time ? ` - ${event.time}` : ''}`}
                     >
@@ -229,8 +239,8 @@ export default function MonthCalendarPage() {
               </div>
             );
           })}
-        </div>
-      </div>
+        </div> {/* End of Calendar Grid */}
+      </div> 
     </main>
   );
 }
