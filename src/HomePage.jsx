@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { addDays, format, startOfWeek, parse, isFuture, compareAsc } from 'date-fns';
+import { addDays, format, startOfWeek, parse, isFuture, compareAsc, endOfDay } from 'date-fns'; // Added endOfDay for clarity if needed, though not used directly in weekEnd calc
 import { allCompetitions } from './data/competitionsData'; // Ensure this path is correct
 
 // Helper function to shorten time display
 const formatTimeShorter = (timeString) => {
-  if (!timeString || !timeString.includes(' – ')) return timeString; // Basic validation or fallback
-
+  if (!timeString || !timeString.includes(' – ')) return timeString;
   const parts = timeString.split(' – ');
   const startTimePart = parts[0].replace(':00', '').trim(); // "5 PM" or "10 AM"
   const endTimePart = parts[1].replace(':00', '').trim();   // "6 PM" or "11 AM"
@@ -23,11 +22,10 @@ const formatTimeShorter = (timeString) => {
     if (startPeriod === endPeriod) {
       return `${startHour}-${endHour}${endPeriod}`; // e.g., "5-6pm" or "10-11am"
     } else {
-      // Handles cases like "11 AM - 1 PM" -> "11am-1pm"
       return `${startHour}${startPeriod}-${endHour}${endPeriod}`; 
     }
   }
-  return timeString; // Fallback to original if regex match fails
+  return timeString; // Fallback
 };
 
 export default function HomePage() {
@@ -95,30 +93,27 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen p-4 md:p-6 bg-slate-900 text-slate-200"> {/* Adjusted padding for small screens */}
-      <header className="text-center mb-6 md:mb-8"> {/* Adjusted margin for small screens */}
+    <main className="min-h-screen p-4 md:p-6 bg-slate-900 text-slate-200">
+      <header className="text-center mb-6 md:mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-blue-400 mb-2">Cheer Me Out</h1>
         <p className="text-md md:text-lg text-slate-400">Weekly Calendar, Events, and Team information.</p>
       </header>
 
-      <div className="max-w-7xl mx-auto space-y-6 md:space-y-8"> {/* Adjusted spacing */}
+      <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
         
-        {/* Button Filters Section */}
         <div className="space-y-6">
-          {/* Teams Filters */}
           <div className="text-center">
             <h3 className="text-lg md:text-xl font-semibold text-blue-400 mb-1">
               <Link to="/teams" className="hover:text-blue-300 hover:underline transition-colors duration-150 ease-in-out">
                 Memphis Pride Cheer Teams
               </Link>
             </h3>
-            <div className="flex items-center overflow-x-auto py-2 gap-2 sm:gap-3 md:flex-wrap md:justify-center md:overflow-x-visible md:gap-4 mt-2 md:mt-3">
+            <div className="flex items-center overflow-x-auto py-2 gap-3 sm:flex-wrap sm:justify-center sm:overflow-x-visible sm:gap-4 mt-2 md:mt-3">
               {teamPractice.map((teamInfo) => (
                 <button
                   key={teamInfo.team}
                   onClick={() => toggleTeam(teamInfo.team)}
-                  // Responsive sizing for team image buttons maintained
-                  className={`flex-shrink-0 rounded overflow-hidden w-24 h-24 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
+                  className={`flex-shrink-0 rounded overflow-hidden w-28 h-28 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
                     visibleTeams.has(teamInfo.team) 
                       ? 'ring-4 ring-red-500 ring-inset bg-slate-700 border-red-500' 
                       : 'bg-slate-800 border-slate-600 hover:border-red-500'
@@ -134,7 +129,7 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-          {/* Tumbling Filters */}
+          
           <div className="text-center">
             <h3 className="text-lg md:text-xl font-semibold text-blue-400 mb-2 md:mb-3">
               <Link to="/tumbling-levels" className="hover:text-blue-300 hover:underline transition-colors">
@@ -142,13 +137,13 @@ export default function HomePage() {
               </Link>
             </h3>
             <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4">
-              <img src="/images/Levelup.png" alt="Level Up Logo" className="w-20 h-20 sm:w-24 sm:h-24 object-contain flex-shrink-0 hidden sm:block" /> {/* Hide on xs, show on sm+ */}
-              <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2"> {/* Smaller gap for buttons */}
+              <img src="/images/Levelup.png" alt="Level Up Logo" className="w-20 h-20 sm:w-24 sm:h-24 object-contain flex-shrink-0 hidden sm:block" />
+              <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
                 {Object.keys(levelIcons).map((lvl) => (
                   <button
                     key={lvl}
                     onClick={() => toggleLevel(lvl)}
-                    className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded text-xs sm:text-sm transition-colors ${ /* Adjusted padding & font */
+                    className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded text-xs sm:text-sm transition-colors ${
                       visibleLevels.has(lvl) 
                         ? 'bg-red-600 text-white' 
                         : 'bg-slate-700 text-slate-100 hover:bg-slate-600'
@@ -158,13 +153,12 @@ export default function HomePage() {
                   </button>
                 ))}
               </div>
-              <img src="/images/Levelup.png" alt="Level Up Logo" className="w-20 h-20 sm:w-24 sm:h-24 object-contain flex-shrink-0 hidden sm:block" /> {/* Hide on xs, show on sm+ */}
+              <img src="/images/Levelup.png" alt="Level Up Logo" className="w-20 h-20 sm:w-24 sm:h-24 object-contain flex-shrink-0 hidden sm:block" />
             </div>
           </div>
         </div>
         
-        {/* Week Navigation */}
-        <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-6 mb-3 md:mb-4">
+        <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-6">
           <button
             onClick={() => setWeekOffset(weekOffset - 1)}
             className="p-1.5 sm:p-2 rounded-full hover:bg-slate-700 focus:bg-slate-600 focus:outline-none transition-colors"
@@ -196,15 +190,14 @@ export default function HomePage() {
           </button>
         </div>
 
-        {/* Calendar Table */}
         <div className="overflow-x-auto bg-slate-800 rounded-lg shadow-md">
-            <table className="min-w-full border-collapse">
+            <table className="table-fixed w-full border-collapse"> {/* Applied table-fixed and w-full for responsive fixed columns */}
               <thead>
                 <tr className="bg-blue-800">
                   {daysOfWeek.map((day, idx) => (
-                    <th key={day} className="p-2 sm:p-3 text-center sm:text-left text-xs sm:text-sm font-semibold text-blue-100 border-b border-blue-700">
-                      <span className="hidden sm:inline">{day}</span> 
-                      <span className="sm:hidden">{day.substring(0,1)}</span> {/* Abbreviate for xs screens */}
+                    <th key={day} className="w-1/7 sm:w-44 p-2 text-center align-top text-xs sm:text-sm font-semibold text-blue-100 border-b border-blue-700"> {/* Responsive width for TH */}
+                      <span className="block sm:inline">{day}</span> 
+                      <span className="block sm:hidden text-xxs">{day.substring(0,3)}</span> {/* Abbreviate for xs screens */}
                       <br />
                       <span className="text-xxs sm:text-xs text-blue-300 font-normal">{getDateForDay(idx)}</span>
                     </th>
@@ -214,23 +207,23 @@ export default function HomePage() {
               <tbody>
                 <tr>
                   {daysOfWeek.map((day, dayIndex) => (
-                    <td key={day} className={`align-top p-1 sm:p-2 border border-slate-700 w-1/7 ${dayIndex === 0 ? 'border-l-0' : ''} ${dayIndex === daysOfWeek.length - 1 ? 'border-r-0' : ''}`}>
-                      <ul className="space-y-1.5 sm:space-y-2">
+                    <td key={day} className={`align-top p-1 sm:p-1.5 border border-slate-700 ${dayIndex === 0 ? 'border-l-0' : ''} ${dayIndex === daysOfWeek.length - 1 ? 'border-r-0' : ''}`}>
+                      <ul className="space-y-1 sm:space-y-1.5">
                         {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
-                          <li className="bg-slate-700 shadow-sm p-1 sm:p-1.5 rounded"> {/* Adjusted padding */}
+                          <li className="bg-slate-700 shadow-sm p-1 sm:p-1.5 rounded">
                             <p className="text-blue-300 font-semibold text-xs sm:text-sm mb-0.5">All Star Tumbling</p>
                             {tumblingSchedule.filter((entry) => entry.day === day && visibleLevels.has(entry.level)).map((entry, idx) => (
-                              <div key={`tum-${idx}-${day}`} className="text-xxs sm:text-xs text-slate-300 leading-tight"> {/* Adjusted font size & leading */}
+                              <div key={`tum-${idx}-${day}`} className="text-[10px] sm:text-xs text-slate-300 leading-tight"> {/* Adjusted font size */}
                                 {levelIcons[entry.level]} {entry.level}: {formatTimeShorter(entry.time)}
                               </div>
                             ))}
                           </li>
                         )}
                         {visibleTeams.size > 0 && teamPractice.some((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)) && (
-                          <li className="bg-slate-700 shadow-sm p-1 sm:p-1.5 rounded"> {/* Adjusted padding */}
+                          <li className="bg-slate-700 shadow-sm p-1 sm:p-1.5 rounded"> 
                             <p className="text-blue-300 font-semibold text-xs sm:text-sm mb-0.5">Team Practices</p>
                             {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
-                              <div key={`team-${idx}-${day}`} className="text-xxs sm:text-xs text-slate-300 leading-tight"> {/* Adjusted font size & leading */}
+                              <div key={`team-${idx}-${day}`} className="text-[10px] sm:text-xs text-slate-300 leading-tight"> {/* Adjusted font size */}
                                 {teamIcons[entry.team] && <span className="mr-0.5 sm:mr-1">{teamIcons[entry.team]}</span>}
                                 {entry.team}: {formatTimeShorter('6:00 PM – 8:00 PM')}
                               </div>
@@ -245,7 +238,6 @@ export default function HomePage() {
             </table>
         </div>
         
-        {/* "View Full Month Calendar" Button */}
         <div className="text-center"> 
           <button
             onClick={handleShowMonth}
@@ -255,9 +247,7 @@ export default function HomePage() {
           </button>
         </div>
 
-        {/* Upcoming Competitions Section */}
         <section>
-           {/* ... Upcoming competitions display ... */}
           <div className="text-center mb-6">
             <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-2">Upcoming Competitions</h2>
             <Link to="/competitions" className="text-xs sm:text-sm text-red-500 hover:text-red-400 hover:underline transition-colors">
