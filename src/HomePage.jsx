@@ -181,7 +181,7 @@ export default function HomePage() {
           <div className="text-center">
             <h4 className="text-md sm:text-lg md:text-xl font-semibold text-slate-100 whitespace-nowrap">
               {/* THIS IS THE CORRECTED LINE: */}
-              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d,<y_bin_46>)}
+          {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')}
             </h4>
             {weekOffset !== 0 && (
               <button
