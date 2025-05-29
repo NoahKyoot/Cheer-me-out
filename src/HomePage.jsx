@@ -3,6 +3,33 @@ import { Link, useNavigate } from 'react-router-dom';
 import { addDays, format, startOfWeek, parse, isFuture, compareAsc } from 'date-fns';
 import { allCompetitions } from './data/competitionsData'; // Ensure this path is correct
 
+// Helper function to shorten time display
+const formatTimeShorter = (timeString) => {
+  if (!timeString || !timeString.includes(' – ')) return timeString; // Basic validation or fallback
+
+  const parts = timeString.split(' – ');
+  const startTimePart = parts[0].replace(':00', '').trim(); // "5 PM" or "10 AM"
+  const endTimePart = parts[1].replace(':00', '').trim();   // "6 PM" or "11 AM"
+
+  const startMatch = startTimePart.match(/(\d+)\s*(AM|PM)/i);
+  const endMatch = endTimePart.match(/(\d+)\s*(AM|PM)/i);
+
+  if (startMatch && endMatch) {
+    const startHour = startMatch[1];
+    const startPeriod = startMatch[2].toLowerCase();
+    const endHour = endMatch[1];
+    const endPeriod = endMatch[2].toLowerCase();
+
+    if (startPeriod === endPeriod) {
+      return `${startHour}-${endHour}${endPeriod}`; // e.g., "5-6pm" or "10-11am"
+    } else {
+      // Handles cases like "11 AM - 1 PM" -> "11am-1pm"
+      return `${startHour}${startPeriod}-${endHour}${endPeriod}`; 
+    }
+  }
+  return timeString; // Fallback to original if regex match fails
+};
+
 export default function HomePage() {
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const [weekOffset, setWeekOffset] = useState(0);
@@ -68,28 +95,30 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen p-6 bg-slate-900 text-slate-200">
-      <header className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-blue-400 mb-2">Cheer Me Out</h1>
-        <p className="text-lg text-slate-400">Weekly Calendar, Events, and Team information.</p>
+    <main className="min-h-screen p-4 md:p-6 bg-slate-900 text-slate-200"> {/* Adjusted padding for small screens */}
+      <header className="text-center mb-6 md:mb-8"> {/* Adjusted margin for small screens */}
+        <h1 className="text-3xl md:text-4xl font-bold text-blue-400 mb-2">Cheer Me Out</h1>
+        <p className="text-md md:text-lg text-slate-400">Weekly Calendar, Events, and Team information.</p>
       </header>
 
-      <div className="max-w-7xl mx-auto space-y-8">
+      <div className="max-w-7xl mx-auto space-y-6 md:space-y-8"> {/* Adjusted spacing */}
         
-        {/* Button Filters Section - Teams first, then Tumbling */}
+        {/* Button Filters Section */}
         <div className="space-y-6">
+          {/* Teams Filters */}
           <div className="text-center">
-            <h3 className="text-xl font-semibold text-blue-400 mb-1">
+            <h3 className="text-lg md:text-xl font-semibold text-blue-400 mb-1">
               <Link to="/teams" className="hover:text-blue-300 hover:underline transition-colors duration-150 ease-in-out">
                 Memphis Pride Cheer Teams
               </Link>
             </h3>
-            <div className="flex items-center overflow-x-auto py-2 gap-3 sm:flex-wrap sm:justify-center sm:overflow-x-visible sm:gap-4 mt-3">
+            <div className="flex items-center overflow-x-auto py-2 gap-2 sm:gap-3 md:flex-wrap md:justify-center md:overflow-x-visible md:gap-4 mt-2 md:mt-3">
               {teamPractice.map((teamInfo) => (
                 <button
                   key={teamInfo.team}
                   onClick={() => toggleTeam(teamInfo.team)}
-                  className={`flex-shrink-0 rounded overflow-hidden w-28 h-28 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
+                  // Responsive sizing for team image buttons maintained
+                  className={`flex-shrink-0 rounded overflow-hidden w-24 h-24 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
                     visibleTeams.has(teamInfo.team) 
                       ? 'ring-4 ring-red-500 ring-inset bg-slate-700 border-red-500' 
                       : 'bg-slate-800 border-slate-600 hover:border-red-500'
@@ -105,29 +134,21 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-          
-          {/* All Star Tumbling Levels Group with Logos */}
+          {/* Tumbling Filters */}
           <div className="text-center">
-            <h3 className="text-xl font-semibold text-blue-400 mb-3">
+            <h3 className="text-lg md:text-xl font-semibold text-blue-400 mb-2 md:mb-3">
               <Link to="/tumbling-levels" className="hover:text-blue-300 hover:underline transition-colors">
                 All Star Tumbling
               </Link>
             </h3>
-            <div className="flex items-center justify-center gap-3 sm:gap-4 md:gap-6">
-              {/* Left Logo */}
-              <img
-                src="/images/Levelup.png"
-                alt="Level Up Logo"
-                // UPDATED: Size matches team boxes, object-contain added
-                className="w-28 h-28 sm:w-24 sm:h-24 object-contain flex-shrink-0" 
-              />
-
-              <div className="flex flex-wrap justify-center gap-2">
+            <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4">
+              <img src="/images/Levelup.png" alt="Level Up Logo" className="w-20 h-20 sm:w-24 sm:h-24 object-contain flex-shrink-0 hidden sm:block" /> {/* Hide on xs, show on sm+ */}
+              <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2"> {/* Smaller gap for buttons */}
                 {Object.keys(levelIcons).map((lvl) => (
                   <button
                     key={lvl}
                     onClick={() => toggleLevel(lvl)}
-                    className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded text-xs sm:text-sm transition-colors ${
+                    className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded text-xs sm:text-sm transition-colors ${ /* Adjusted padding & font */
                       visibleLevels.has(lvl) 
                         ? 'bg-red-600 text-white' 
                         : 'bg-slate-700 text-slate-100 hover:bg-slate-600'
@@ -137,35 +158,29 @@ export default function HomePage() {
                   </button>
                 ))}
               </div>
-
-              {/* Right Logo */}
-              <img
-                src="/images/Levelup.png"
-                alt="Level Up Logo"
-                // UPDATED: Size matches team boxes, object-contain added
-                className="w-28 h-28 sm:w-24 sm:h-24 object-contain flex-shrink-0"
-              />
+              <img src="/images/Levelup.png" alt="Level Up Logo" className="w-20 h-20 sm:w-24 sm:h-24 object-contain flex-shrink-0 hidden sm:block" /> {/* Hide on xs, show on sm+ */}
             </div>
           </div>
         </div>
         
         {/* Week Navigation */}
-        <div className="flex items-center justify-center gap-3 sm:gap-6">
+        <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-6 mb-3 md:mb-4">
           <button
             onClick={() => setWeekOffset(weekOffset - 1)}
-            className="p-2 rounded-full hover:bg-slate-700 focus:bg-slate-600 focus:outline-none transition-colors"
+            className="p-1.5 sm:p-2 rounded-full hover:bg-slate-700 focus:bg-slate-600 focus:outline-none transition-colors"
             aria-label="Previous Week"
           >
-            <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
           </button>
 
           <div className="text-center">
-            <h4 className="text-lg sm:text-xl font-semibold text-slate-100 whitespace-nowrap">
-              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')}            </h4>
+            <h4 className="text-md sm:text-lg md:text-xl font-semibold text-slate-100 whitespace-nowrap">
+              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')}
+            </h4>
             {weekOffset !== 0 && (
               <button
                 onClick={() => setWeekOffset(0)}
-                className="text-xs text-red-500 hover:text-red-400 hover:underline focus:outline-none mt-1"
+                className="text-xxs sm:text-xs text-red-500 hover:text-red-400 hover:underline focus:outline-none mt-0.5 sm:mt-1"
               >
                 (Go to This Week)
               </button>
@@ -174,46 +189,50 @@ export default function HomePage() {
 
           <button
             onClick={() => setWeekOffset(weekOffset + 1)}
-            className="p-2 rounded-full hover:bg-slate-700 focus:bg-slate-600 focus:outline-none transition-colors"
+            className="p-1.5 sm:p-2 rounded-full hover:bg-slate-700 focus:bg-slate-600 focus:outline-none transition-colors"
             aria-label="Next Week"
           >
-            <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
           </button>
         </div>
 
         {/* Calendar Table */}
         <div className="overflow-x-auto bg-slate-800 rounded-lg shadow-md">
-            {/* ... Table structure ... */}
             <table className="min-w-full border-collapse">
               <thead>
                 <tr className="bg-blue-800">
                   {daysOfWeek.map((day, idx) => (
-                    <th key={day} className="p-3 text-left text-sm font-semibold text-blue-100 border-b border-blue-700">{day}<br /><span className="text-xs text-blue-300 font-normal">{getDateForDay(idx)}</span></th>
+                    <th key={day} className="p-2 sm:p-3 text-center sm:text-left text-xs sm:text-sm font-semibold text-blue-100 border-b border-blue-700">
+                      <span className="hidden sm:inline">{day}</span> 
+                      <span className="sm:hidden">{day.substring(0,1)}</span> {/* Abbreviate for xs screens */}
+                      <br />
+                      <span className="text-xxs sm:text-xs text-blue-300 font-normal">{getDateForDay(idx)}</span>
+                    </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   {daysOfWeek.map((day, dayIndex) => (
-                    <td key={day} className={`align-top p-2 border border-slate-700 w-1/7 ${dayIndex === 0 ? 'border-l-0' : ''} ${dayIndex === daysOfWeek.length - 1 ? 'border-r-0' : ''}`}>
-                      <ul className="space-y-2">
+                    <td key={day} className={`align-top p-1 sm:p-2 border border-slate-700 w-1/7 ${dayIndex === 0 ? 'border-l-0' : ''} ${dayIndex === daysOfWeek.length - 1 ? 'border-r-0' : ''}`}>
+                      <ul className="space-y-1.5 sm:space-y-2">
                         {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
-                          <li className="bg-slate-700 shadow-sm p-2 rounded">
-                            <p className="text-blue-300 font-semibold text-sm mb-1">All Star Tumbling</p>
+                          <li className="bg-slate-700 shadow-sm p-1 sm:p-1.5 rounded"> {/* Adjusted padding */}
+                            <p className="text-blue-300 font-semibold text-xs sm:text-sm mb-0.5">All Star Tumbling</p>
                             {tumblingSchedule.filter((entry) => entry.day === day && visibleLevels.has(entry.level)).map((entry, idx) => (
-                              <div key={`tum-${idx}-${day}`} className="text-xs text-slate-300">
-                                {levelIcons[entry.level]} {entry.level}: {entry.time}
+                              <div key={`tum-${idx}-${day}`} className="text-xxs sm:text-xs text-slate-300 leading-tight"> {/* Adjusted font size & leading */}
+                                {levelIcons[entry.level]} {entry.level}: {formatTimeShorter(entry.time)}
                               </div>
                             ))}
                           </li>
                         )}
                         {visibleTeams.size > 0 && teamPractice.some((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)) && (
-                          <li className="bg-slate-700 shadow-sm p-2 rounded"> 
-                            <p className="text-blue-300 font-semibold text-sm mb-1">Team Practices</p>
+                          <li className="bg-slate-700 shadow-sm p-1 sm:p-1.5 rounded"> {/* Adjusted padding */}
+                            <p className="text-blue-300 font-semibold text-xs sm:text-sm mb-0.5">Team Practices</p>
                             {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
-                              <div key={`team-${idx}-${day}`} className="text-xs text-slate-300">
-                                {teamIcons[entry.team] && <span className="mr-1">{teamIcons[entry.team]}</span>}
-                                {entry.team}: 6:00 PM – 8:00 PM
+                              <div key={`team-${idx}-${day}`} className="text-xxs sm:text-xs text-slate-300 leading-tight"> {/* Adjusted font size & leading */}
+                                {teamIcons[entry.team] && <span className="mr-0.5 sm:mr-1">{teamIcons[entry.team]}</span>}
+                                {entry.team}: {formatTimeShorter('6:00 PM – 8:00 PM')}
                               </div>
                             ))}
                           </li>
@@ -238,24 +257,24 @@ export default function HomePage() {
 
         {/* Upcoming Competitions Section */}
         <section>
-          {/* ... (Upcoming competitions display code remains the same) ... */}
+           {/* ... Upcoming competitions display ... */}
           <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold text-slate-100 mb-2">Upcoming Competitions</h2>
-            <Link to="/competitions" className="text-sm text-red-500 hover:text-red-400 hover:underline transition-colors">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-2">Upcoming Competitions</h2>
+            <Link to="/competitions" className="text-xs sm:text-sm text-red-500 hover:text-red-400 hover:underline transition-colors">
               (View All Competitions)
             </Link>
           </div>
           {upcomingCompetitions.length > 0 ? (
-            <div className={`flex overflow-x-auto pb-4 pt-2 px-4 sm:px-6 gap-6 snap-x snap-mandatory ${
+            <div className={`flex overflow-x-auto pb-4 pt-2 px-2 sm:px-4 md:px-6 gap-4 md:gap-6 snap-x snap-mandatory ${
                 upcomingCompetitions.length === 1 ? 'justify-center' : ''
             }`}>
               {upcomingCompetitions.map((comp) => (
                 <div
                   key={comp.id}
-                  className="flex-shrink-0 w-72 md:w-80 snap-center bg-slate-800 text-slate-200 shadow-xl rounded-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl hover:bg-slate-700 flex flex-col items-center text-center"
+                  className="flex-shrink-0 w-64 sm:w-72 md:w-80 snap-center bg-slate-800 text-slate-200 shadow-xl rounded-lg p-4 sm:p-6 transition-all duration-300 ease-in-out hover:shadow-2xl hover:bg-slate-700 flex flex-col items-center text-center"
                 >
                   {comp.logo && (
-                    <div className="w-24 h-24 mb-4 bg-slate-700 rounded-md flex items-center justify-center p-2 shadow-sm">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 mb-3 bg-slate-700 rounded-md flex items-center justify-center p-1 sm:p-2 shadow-sm">
                       <img
                         src={`/images/competition-logos/${comp.logo}`}
                         alt={`${comp.brand || comp.eventName} Logo`}
@@ -263,24 +282,24 @@ export default function HomePage() {
                       />
                     </div>
                   )}
-                  <h3 className="text-xl font-bold text-blue-300 mb-1 line-clamp-2">{comp.eventName}</h3>
-                  {comp.brand && <p className="text-xs text-slate-400 mb-2">{comp.brand}</p>}
-                  <p className="text-slate-300 text-sm mb-1">
+                  <h3 className="text-lg sm:text-xl font-bold text-blue-300 mb-1 line-clamp-2">{comp.eventName}</h3>
+                  {comp.brand && <p className="text-xxs sm:text-xs text-slate-400 mb-1 sm:mb-2">{comp.brand}</p>}
+                  <p className="text-slate-300 text-xs sm:text-sm mb-1">
                     📅 <span className="font-medium">{comp.fullDates || comp.dateString}</span>
                   </p>
                   {comp.venue && (
-                    <p className="text-slate-400 text-xs mb-3">
+                    <p className="text-slate-400 text-xxs sm:text-xs mb-2 sm:mb-3">
                       📍 {comp.venue.name}{comp.venue.address.split(',').length > 1 ? `, ${comp.venue.address.split(',').slice(1, 2).join(',').trim()}` : ''}
                     </p>
                   )}
                   {comp.description && (
-                    <p className="text-slate-300 text-xs mt-1 mb-3 line-clamp-3 flex-grow">
+                    <p className="text-slate-300 text-xxs sm:text-xs mt-1 mb-3 line-clamp-2 sm:line-clamp-3 flex-grow">
                       {comp.description}
                     </p>
                   )}
                   <Link
                     to={`/competitions/${comp.id}`}
-                    className="mt-auto inline-block bg-red-600 text-white px-5 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition-colors"
+                    className="mt-auto inline-block bg-red-600 text-white px-4 py-1.5 sm:px-5 sm:py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-red-700 transition-colors"
                   >
                     View Details
                   </Link>
