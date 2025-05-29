@@ -1,31 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { addDays, format, startOfWeek, parse, isFuture, compareAsc, endOfDay } from 'date-fns'; // Added endOfDay for clarity if needed, though not used directly in weekEnd calc
+import { addDays, format, startOfWeek, parse, isFuture, compareAsc } from 'date-fns';
 import { allCompetitions } from './data/competitionsData'; // Ensure this path is correct
 
 // Helper function to shorten time display
 const formatTimeShorter = (timeString) => {
   if (!timeString || !timeString.includes(' – ')) return timeString;
   const parts = timeString.split(' – ');
-  const startTimePart = parts[0].replace(':00', '').trim(); // "5 PM" or "10 AM"
-  const endTimePart = parts[1].replace(':00', '').trim();   // "6 PM" or "11 AM"
-
+  const startTimePart = parts[0].replace(':00', '').trim();
+  const endTimePart = parts[1].replace(':00', '').trim();
   const startMatch = startTimePart.match(/(\d+)\s*(AM|PM)/i);
   const endMatch = endTimePart.match(/(\d+)\s*(AM|PM)/i);
-
   if (startMatch && endMatch) {
     const startHour = startMatch[1];
     const startPeriod = startMatch[2].toLowerCase();
     const endHour = endMatch[1];
     const endPeriod = endMatch[2].toLowerCase();
-
     if (startPeriod === endPeriod) {
-      return `${startHour}-${endHour}${endPeriod}`; // e.g., "5-6pm" or "10-11am"
+      return `${startHour}-${endHour}${endPeriod}`;
     } else {
       return `${startHour}${startPeriod}-${endHour}${endPeriod}`; 
     }
   }
-  return timeString; // Fallback
+  return timeString;
 };
 
 export default function HomePage() {
@@ -40,7 +37,18 @@ export default function HomePage() {
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
   const weekEnd = addDays(weekStart, 6);
 
+  // Used for display in the calendar grid
   const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
+  
+  // Data for tumbling level image filter buttons
+  const tumblingLevelDetails = [
+    { id: 'level-1', name: 'Level 1', image: 'Level1.png' },
+    { id: 'level-2', name: 'Level 2', image: 'Level2.png' },
+    { id: 'level-3', name: 'Level 3', image: 'Level3.png' },
+    { id: 'level-4', name: 'Level 4', image: 'Level4.png' },
+    { id: 'level-56', name: 'Level 5/6', image: 'Level56.png' }
+  ];
+
   const teamIcons = { 
     Majors: '🌟', Legacy: '👑', Blaze: '🔥', Dynasty: '🏰', Reign: '💎',
     Prodigy: '🚀', 'Lady Legends': '🎀', 'Black Smack': '🖤', Inferno: '🔥'
@@ -76,9 +84,9 @@ export default function HomePage() {
     setUpcomingCompetitions(futureCompetitions.slice(0, 5)); 
   }, []); 
 
-  const toggleLevel = (lvl) => { 
+  const toggleLevel = (levelName) => { 
     const updated = new Set(visibleLevels);
-    updated.has(lvl) ? updated.delete(lvl) : updated.add(lvl);
+    updated.has(levelName) ? updated.delete(levelName) : updated.add(levelName);
     setVisibleLevels(updated);
   };
   const toggleTeam = (team) => { 
@@ -102,6 +110,7 @@ export default function HomePage() {
       <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
         
         <div className="space-y-6">
+          {/* Teams Filters */}
           <div className="text-center">
             <h3 className="text-lg md:text-xl font-semibold text-blue-400 mb-1">
               <Link to="/teams" className="hover:text-blue-300 hover:underline transition-colors duration-150 ease-in-out">
@@ -130,30 +139,32 @@ export default function HomePage() {
             </div>
           </div>
           
+          {/* All Star Tumbling Levels Group with Image Logos */}
           <div className="text-center">
             <h3 className="text-lg md:text-xl font-semibold text-blue-400 mb-2 md:mb-3">
               <Link to="/tumbling-levels" className="hover:text-blue-300 hover:underline transition-colors">
                 All Star Tumbling
               </Link>
             </h3>
-            <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4">
-              <img src="/images/Levelup.png" alt="Level Up Logo" className="w-20 h-20 sm:w-24 sm:h-24 object-contain flex-shrink-0 hidden sm:block" />
-              <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
-                {Object.keys(levelIcons).map((lvl) => (
-                  <button
-                    key={lvl}
-                    onClick={() => toggleLevel(lvl)}
-                    className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded text-xs sm:text-sm transition-colors ${
-                      visibleLevels.has(lvl) 
-                        ? 'bg-red-600 text-white' 
-                        : 'bg-slate-700 text-slate-100 hover:bg-slate-600'
-                    }`}
-                  >
-                    {levelIcons[lvl]} {lvl}
-                  </button>
-                ))}
-              </div>
-              <img src="/images/Levelup.png" alt="Level Up Logo" className="w-20 h-20 sm:w-24 sm:h-24 object-contain flex-shrink-0 hidden sm:block" />
+            <div className="flex items-center overflow-x-auto py-2 gap-3 sm:flex-wrap sm:justify-center sm:overflow-x-visible sm:gap-4 mt-2 md:mt-3">
+              {tumblingLevelDetails.map((level) => (
+                <button
+                  key={level.id}
+                  onClick={() => toggleLevel(level.name)}
+                  className={`flex-shrink-0 rounded overflow-hidden w-28 h-28 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
+                    visibleLevels.has(level.name)
+                      ? 'ring-4 ring-red-500 ring-inset bg-slate-700 border-red-500' 
+                      : 'bg-slate-800 border-slate-600 hover:border-red-500'
+                  }`}
+                  title={level.name}
+                >
+                  <img
+                    src={`/images/${level.image}`} 
+                    alt={`${level.name} Logo`}
+                    className="max-w-full max-h-full object-contain"
+                  />
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -166,10 +177,9 @@ export default function HomePage() {
           >
             <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
           </button>
-
           <div className="text-center">
             <h4 className="text-md sm:text-lg md:text-xl font-semibold text-slate-100 whitespace-nowrap">
-              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')}
+              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')} {/* Corrected format */}
             </h4>
             {weekOffset !== 0 && (
               <button
@@ -180,7 +190,6 @@ export default function HomePage() {
               </button>
             )}
           </div>
-
           <button
             onClick={() => setWeekOffset(weekOffset + 1)}
             className="p-1.5 sm:p-2 rounded-full hover:bg-slate-700 focus:bg-slate-600 focus:outline-none transition-colors"
@@ -191,13 +200,13 @@ export default function HomePage() {
         </div>
 
         <div className="overflow-x-auto bg-slate-800 rounded-lg shadow-md">
-            <table className="table-fixed w-full border-collapse"> {/* Applied table-fixed and w-full for responsive fixed columns */}
+            <table className="table-fixed w-full border-collapse">
               <thead>
                 <tr className="bg-blue-800">
                   {daysOfWeek.map((day, idx) => (
-                    <th key={day} className="w-1/7 sm:w-44 p-2 text-center align-top text-xs sm:text-sm font-semibold text-blue-100 border-b border-blue-700"> {/* Responsive width for TH */}
+                    <th key={day} className="w-1/7 sm:w-44 p-2 text-center align-top text-xs sm:text-sm font-semibold text-blue-100 border-b border-blue-700">
                       <span className="block sm:inline">{day}</span> 
-                      <span className="block sm:hidden text-xxs">{day.substring(0,3)}</span> {/* Abbreviate for xs screens */}
+                      <span className="block sm:hidden text-xxs">{day.substring(0,3)}</span>
                       <br />
                       <span className="text-xxs sm:text-xs text-blue-300 font-normal">{getDateForDay(idx)}</span>
                     </th>
@@ -213,7 +222,7 @@ export default function HomePage() {
                           <li className="bg-slate-700 shadow-sm p-1 sm:p-1.5 rounded">
                             <p className="text-blue-300 font-semibold text-xs sm:text-sm mb-0.5">All Star Tumbling</p>
                             {tumblingSchedule.filter((entry) => entry.day === day && visibleLevels.has(entry.level)).map((entry, idx) => (
-                              <div key={`tum-${idx}-${day}`} className="text-[10px] sm:text-xs text-slate-300 leading-tight"> {/* Adjusted font size */}
+                              <div key={`tum-${idx}-${day}`} className="text-[10px] sm:text-xs text-slate-300 leading-tight">
                                 {levelIcons[entry.level]} {entry.level}: {formatTimeShorter(entry.time)}
                               </div>
                             ))}
@@ -223,7 +232,7 @@ export default function HomePage() {
                           <li className="bg-slate-700 shadow-sm p-1 sm:p-1.5 rounded"> 
                             <p className="text-blue-300 font-semibold text-xs sm:text-sm mb-0.5">Team Practices</p>
                             {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
-                              <div key={`team-${idx}-${day}`} className="text-[10px] sm:text-xs text-slate-300 leading-tight"> {/* Adjusted font size */}
+                              <div key={`team-${idx}-${day}`} className="text-[10px] sm:text-xs text-slate-300 leading-tight">
                                 {teamIcons[entry.team] && <span className="mr-0.5 sm:mr-1">{teamIcons[entry.team]}</span>}
                                 {entry.team}: {formatTimeShorter('6:00 PM – 8:00 PM')}
                               </div>
