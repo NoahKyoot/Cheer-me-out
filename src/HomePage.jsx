@@ -37,7 +37,18 @@ export default function HomePage() {
   const weekStart = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), weekOffset * 7);
   const weekEnd = addDays(weekStart, 6);
 
+  // Used for display in the calendar grid if image buttons don't provide icons directly
   const levelIcons = { 'Level 1': '🔰', 'Level 2': '🥈', 'Level 3': '🥉', 'Level 4': '🏅', 'Level 5/6': '🔥' };
+  
+  // Data for tumbling level image filter buttons
+  const tumblingLevelDetails = [
+    { id: 'level-1', name: 'Level 1', image: 'Level1.png' },
+    { id: 'level-2', name: 'Level 2', image: 'Level2.png' },
+    { id: 'level-3', name: 'Level 3', image: 'Level3.png' },
+    { id: 'level-4', name: 'Level 4', image: 'Level4.png' },
+    { id: 'level-56', name: 'Level 5/6', image: 'Level56.png' }
+  ];
+
   const teamIcons = { 
     Majors: '🌟', Legacy: '👑', Blaze: '🔥', Dynasty: '🏰', Reign: '💎',
     Prodigy: '🚀', 'Lady Legends': '🎀', 'Black Smack': '🖤', Inferno: '🔥'
@@ -73,9 +84,9 @@ export default function HomePage() {
     setUpcomingCompetitions(futureCompetitions.slice(0, 5)); 
   }, []); 
 
-  const toggleLevel = (lvl) => { 
+  const toggleLevel = (levelName) => { 
     const updated = new Set(visibleLevels);
-    updated.has(lvl) ? updated.delete(lvl) : updated.add(lvl);
+    updated.has(levelName) ? updated.delete(levelName) : updated.add(levelName);
     setVisibleLevels(updated);
   };
   const toggleTeam = (team) => { 
@@ -99,7 +110,7 @@ export default function HomePage() {
       <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
         
         <div className="space-y-6">
-          {/* ... Team and Tumbling Filters ... (code unchanged) */}
+          {/* Teams Filters */}
           <div className="text-center">
             <h3 className="text-lg md:text-xl font-semibold text-blue-400 mb-1">
               <Link to="/teams" className="hover:text-blue-300 hover:underline transition-colors duration-150 ease-in-out">
@@ -128,42 +139,38 @@ export default function HomePage() {
             </div>
           </div>
           
+          {/* All Star Tumbling Levels Group with Image Logos */}
           <div className="text-center">
             <h3 className="text-lg md:text-xl font-semibold text-blue-400 mb-2 md:mb-3">
               <Link to="/tumbling-levels" className="hover:text-blue-300 hover:underline transition-colors">
                 All Star Tumbling
               </Link>
             </h3>
-            <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4">
-              <img src="/images/Levelup.png" alt="Level Up Logo" className="w-20 h-20 sm:w-24 sm:h-24 object-contain flex-shrink-0 hidden sm:block" />
-              <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
-                {tumblingLevelDetails.map((level) => ( // Assuming tumblingLevelDetails is defined as per previous updates
-                  <button
-                    key={level.id}
-                    onClick={() => toggleLevel(level.name)}
-                    className={`flex-shrink-0 rounded overflow-hidden w-28 h-28 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
-                      visibleLevels.has(level.name)
-                        ? 'ring-4 ring-red-500 ring-inset bg-slate-700 border-red-500' 
-                        : 'bg-slate-800 border-slate-600 hover:border-red-500'
-                    }`}
-                    title={level.name}
-                  >
-                    <img
-                      src={`/images/${level.image}`} 
-                      alt={`${level.name} Logo`}
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  </button>
-                ))}
-              </div>
-              <img src="/images/Levelup.png" alt="Level Up Logo" className="w-20 h-20 sm:w-24 sm:h-24 object-contain flex-shrink-0 hidden sm:block" />
+            <div className="flex items-center overflow-x-auto py-2 gap-3 sm:flex-wrap sm:justify-center sm:overflow-x-visible sm:gap-4 mt-2 md:mt-3">
+              {tumblingLevelDetails.map((level) => (
+                <button
+                  key={level.id}
+                  onClick={() => toggleLevel(level.name)}
+                  className={`flex-shrink-0 rounded overflow-hidden w-28 h-28 sm:w-24 sm:h-24 border hover:shadow-lg focus:outline-none flex items-center justify-center p-1 transition-all duration-150 ease-in-out ${
+                    visibleLevels.has(level.name)
+                      ? 'ring-4 ring-red-500 ring-inset bg-slate-700 border-red-500' 
+                      : 'bg-slate-800 border-slate-600 hover:border-red-500'
+                  }`}
+                  title={level.name}
+                >
+                  <img
+                    src={`/images/${level.image}`} 
+                    alt={`${level.name} Logo`}
+                    className="max-w-full max-h-full object-contain"
+                  />
+                </button>
+              ))}
             </div>
           </div>
         </div>
         
         {/* Week Navigation */}
         <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-6">
-          {/* ... Week navigation buttons and date display ... (code unchanged) */}
           <button
             onClick={() => setWeekOffset(weekOffset - 1)}
             className="p-1.5 sm:p-2 rounded-full hover:bg-slate-700 focus:bg-slate-600 focus:outline-none transition-colors"
@@ -173,7 +180,8 @@ export default function HomePage() {
           </button>
           <div className="text-center">
             <h4 className="text-md sm:text-lg md:text-xl font-semibold text-slate-100 whitespace-nowrap">
-            {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d, yyyy')}
+              {/* THIS IS THE CORRECTED LINE: */}
+              {format(weekStart, 'MMMM d')} – {format(weekEnd, 'MMMM d,<y_bin_46>)}
             </h4>
             {weekOffset !== 0 && (
               <button
@@ -193,18 +201,17 @@ export default function HomePage() {
           </button>
         </div>
 
-        {/* UPDATED Calendar Table Section */}
+        {/* Calendar Table */}
         <div className="overflow-x-auto bg-slate-800 rounded-lg shadow-md">
-            {/* Removed min-w-full, added table-fixed. w-full can be used if you want it to try to fill container width, or omit for natural table width. */}
-            <table className="table-fixed border-collapse w-full"> {/* Kept w-full for now, let columns define widths primarily */}
+            <table className="table-fixed w-full border-collapse">
               <thead>
                 <tr className="bg-blue-800">
                   {daysOfWeek.map((day, idx) => (
-                    // Applied fixed width w-40 (160px). Adjust as needed.
-                    // Centered text, smaller font for day name.
-                    <th key={day} className="w-40 p-2 text-center align-top text-xs font-semibold text-blue-100 border-b border-blue-700">
-                      <span className="block">{day.substring(0,3)}</span> {/* Abbreviated day name */}
-                      <span className="block text-[10px] font-normal text-blue-300">{getDateForDay(idx)}</span>
+                    <th key={day} className="w-1/7 sm:w-44 p-2 text-center align-top text-xs sm:text-sm font-semibold text-blue-100 border-b border-blue-700">
+                      <span className="block sm:inline">{day}</span> 
+                      <span className="block sm:hidden text-xxs">{day.substring(0,3)}</span>
+                      <br />
+                      <span className="text-xxs sm:text-xs text-blue-300 font-normal">{getDateForDay(idx)}</span>
                     </th>
                   ))}
                 </tr>
@@ -212,12 +219,11 @@ export default function HomePage() {
               <tbody>
                 <tr>
                   {daysOfWeek.map((day, dayIndex) => (
-                    // Removed w-1/7 from td, width is now dictated by th
-                    <td key={day} className={`align-top p-1 sm:p-1.5 border border-slate-700 ${dayIndex === 0 ? 'border-l-slate-800' : ''} ${dayIndex === daysOfWeek.length - 1 ? 'border-r-slate-800' : ''}`}> {/* Adjusted border for seamless look if table has no outer border */}
+                    <td key={day} className={`align-top p-1 sm:p-1.5 border border-slate-700 ${dayIndex === 0 ? 'border-l-slate-800' : ''} ${dayIndex === daysOfWeek.length - 1 ? 'border-r-slate-800' : ''}`}>
                       <ul className="space-y-1 sm:space-y-1.5">
                         {visibleLevels.size > 0 && tumblingSchedule.some((entry) => entry.day === day && visibleLevels.has(entry.level)) && (
                           <li className="bg-slate-700 shadow-sm p-1 sm:p-1.5 rounded">
-                            <p className="text-blue-300 font-semibold text-xs sm:text-sm mb-0.5">Tumbling</p> {/* Simplified title */}
+                            <p className="text-blue-300 font-semibold text-xs sm:text-sm mb-0.5">Tumbling</p>
                             {tumblingSchedule.filter((entry) => entry.day === day && visibleLevels.has(entry.level)).map((entry, idx) => (
                               <div key={`tum-${idx}-${day}`} className="text-[10px] sm:text-xs text-slate-300 leading-tight">
                                 {levelIcons[entry.level]} {entry.level}: {formatTimeShorter(entry.time)}
@@ -227,7 +233,7 @@ export default function HomePage() {
                         )}
                         {visibleTeams.size > 0 && teamPractice.some((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)) && (
                           <li className="bg-slate-700 shadow-sm p-1 sm:p-1.5 rounded"> 
-                            <p className="text-blue-300 font-semibold text-xs sm:text-sm mb-0.5">Practices</p> {/* Simplified title */}
+                            <p className="text-blue-300 font-semibold text-xs sm:text-sm mb-0.5">Practices</p>
                             {teamPractice.filter((entry) => entry.days.includes(day) && visibleTeams.has(entry.team)).map((entry, idx) => (
                               <div key={`team-${idx}-${day}`} className="text-[10px] sm:text-xs text-slate-300 leading-tight">
                                 {teamIcons[entry.team] && <span className="mr-0.5 sm:mr-1">{teamIcons[entry.team]}</span>}
@@ -244,6 +250,7 @@ export default function HomePage() {
             </table>
         </div>
         
+        {/* "View Full Month Calendar" Button */}
         <div className="text-center"> 
           <button
             onClick={handleShowMonth}
@@ -253,8 +260,8 @@ export default function HomePage() {
           </button>
         </div>
 
+        {/* Upcoming Competitions Section */}
         <section>
-          {/* ... Upcoming competitions display (code unchanged from previous response) ... */}
           <div className="text-center mb-6">
             <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-2">Upcoming Competitions</h2>
             <Link to="/competitions" className="text-xs sm:text-sm text-red-500 hover:text-red-400 hover:underline transition-colors">
